@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('bank_kredits', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_lengkap');
-            $table->string('no_hp');
-            $table->string('avatar');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('role')->default('pelanggan');
-            $table->rememberToken();
+            $table->string('kode_bank')->unique();
+            $table->string('nama_bank');
+            $table->string('logo_bank');
+            $table->text('deskripsi');
+            $table->text('persyaratan');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('bank_kredits');
     }
 };
