@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('harga_kredits', function (Blueprint $table) {
             $table->id();
-            $table->foreeignId('rumah_id')->constrained('rumahs');
+            $table->foreignId('rumah_id')->constrained('rumahs');
             $table->foreignId('bank_kredit_id')->constrained('bank_kredits');
             $table->integer('harga_bangunan');
             $table->integer('uang_muka');

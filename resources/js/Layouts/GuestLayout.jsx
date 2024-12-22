@@ -2,11 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Head, Link } from "@inertiajs/react";
 import MenuNav from "@/Components/MenuNav";
-import { Email, LocalPhone, LocationOn, Menu } from "@mui/icons-material";
+import {
+    CalendarMonth,
+    Call,
+    Email,
+    LocalPhone,
+    LocationOn,
+    Menu,
+} from "@mui/icons-material";
+
 export default function GuestLayout({ children, judul }) {
     var settings = {
         dots: false,
@@ -57,8 +64,6 @@ export default function GuestLayout({ children, judul }) {
     const [navbarFixed, setNavbarFixed] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const scrollEvent = () => {
-        console.log(window.scrollY);
-
         if (window.scrollY > 50) {
             setNavbarFixed(true);
         } else {
@@ -252,7 +257,39 @@ export default function GuestLayout({ children, judul }) {
                 {/* end slider */}
             </div>
             {children}
+            {/* Contact Agent */}
 
+            <div className=" my-3 mx-4 md:mx-8 lg:mx-16 py-6 p-4 flex flex-col md:flex-row justify-between items-start gap-x-4 border border-teal-500 border-dashed rounded-md">
+                <div className="w-full md:w-1/2">
+                    <img
+                        src="./storage/Image/call.jpg"
+                        alt=""
+                        className="w-full"
+                    />
+                </div>
+                <div className="w-full md:w-1/2 py-6 px-8">
+                    <h1 className="font-extrabold text-base md:text-xl lg:text-4xl font-inter text-secondary w-[70%]  leading-3">
+                        Hubungi Sekarang
+                    </h1>
+                    <p className="my-3 font-light text-lg text-gray-500">
+                        Kami akan senang jika anda ingin mengatur jadwal
+                        kunjungan untuk melihat perumahan kami. silahkan
+                        menghubungi kami melalui nomor yang tersedia, atau
+                        silahkan menekan tombol Booking Jadwal Kunjungan untuk
+                        mengatur jadwal kunjungan anda
+                    </p>
+                    <div className="my-3 flex gap-3">
+                        <button className="bg-teal-500 tracking-tighter text-xs md:text-base leading-3 text-white font-light p-5 rounded-md hover:bg-teal-700 useTransition flex gap-3 items-center">
+                            <Call color="inherit" fontSize="inherit" />
+                            <span>Hubungi Kami Sekarang</span>
+                        </button>
+                        <button className="bg-teal-950 tracking-tighter leading-3 text-xs md:text-base text-white font-light  p-5 rounded-md hover:bg-teal-700 useTransition flex gap-3 items-center">
+                            <CalendarMonth color="inherit" fontSize="inherit" />
+                            <span>Booking Kunjungan Sekarang</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
             {/* Footer */}
             <div className="py-6 px-4 md:px-8 lg:px-16 bg-secondary flex md:flex-row flex-col gap-9">
                 <div>

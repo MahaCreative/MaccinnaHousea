@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\TipeRumah;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,11 +17,13 @@ class RumahFactory extends Factory
      */
     public function definition(): array
     {
-
+        $tipe = TipeRumah::get()->pluck('id')->toArray();
         return [
-            'tipe_rumah_id' => '',
-            'kd_rumah' => 'rm' . fake()->random_int(10, 399),
-            'blok_rumah' => fake()->randomElement(['A', 'B', 'C', 'D', 'E']) . rand(1, 100),
+            'tipe_rumah_id' => fake()->randomElement($tipe),
+            'nama_rumah' => fake()->sentence(2),
+            'harga_rumah' => rand(100000000, 900000000),
+            'kd_rumah' => 'rm' . rand(10, 399),
+            'blok_rumah' => fake()->randomElement(['A', 'B', 'C', 'D', 'E']) . '/' . rand(1, 100),
             'status_bangunan' => fake()->randomElement(['selesai', 'proses pembangunan', 'belum selesai']),
             'status_milik' => $statusMilik = fake()->randomElement(['terjual', 'di pesan', 'belum terjual']),
             'nama_pemilik' => $statusMilik == 'belum terjual' ? '' : fake()->name(),
@@ -30,6 +33,7 @@ class RumahFactory extends Factory
             'luas_lahan' => rand(100, 500),
             'status_parkiran' => fake()->randomElement(['false', 'true']),
             'status_dapur' => fake()->randomElement(['false', 'true']),
+            'foto_rumah' => 'Image/property-1.jpg'
         ];
     }
 }
