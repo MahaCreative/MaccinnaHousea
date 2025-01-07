@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('harga_kredits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rumah_id')->constrained('rumahs');
-            $table->foreignId('bank_kredit_id')->constrained('bank_kredits');
+            $table->foreignId('rumah_id')->constrained('rumahs')->onDelete('cascade');
+            $table->foreignId('bank_kredit_id')->constrained('bank_kredits')->onDelete('cascade');
             $table->integer('harga_bangunan');
             $table->integer('uang_muka');
-            $table->integer('diskon');
             $table->integer('harga_cicilan');
             $table->integer('jumlah_cicilan');
         });

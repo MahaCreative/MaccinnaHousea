@@ -22,7 +22,7 @@ import React, { useCallback, useEffect, useState } from "react";
 export default function Index(props) {
     const { data: data } = props.dataRumah;
     const [dataTipe, setDataTipe] = useState([]);
-    const [params, setParams] = useState({ load: "", tipe: "" });
+    const [params, setParams] = useState({ load: "", tipe: "", cari: "" });
     const fetchDataTipe = async () => {
         try {
             const response = await axios.get("http://127.0.0.1:8000/data-tipe");
@@ -75,16 +75,39 @@ export default function Index(props) {
                                 )
                         )}
                     </div>
-                    <select
-                        name="load"
-                        onChange={(e) =>
-                            setParams({ ...params, load: e.target.value })
-                        }
-                        className="my-2 rounded-md border border-slate-500 active:outline-none active:ring-0 focus:ring-0  focus:outline-none focus:border-slate-700 w-full"
+                    <div className="flex gap-1 items-center">
+                        <select
+                            name="load"
+                            value={params.load}
+                            onChange={(e) =>
+                                setParams({ ...params, load: e.target.value })
+                            }
+                            className="form"
+                        >
+                            <option value="1">10</option>
+                            <option value="20">20</option>
+                        </select>
+                        <input
+                            placeholder="Cari Rumah...."
+                            className="form"
+                            value={params.cari}
+                            type="text"
+                            name="cari"
+                            onChange={(e) =>
+                                setParams({
+                                    ...params,
+                                    [e.target.name]: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+                    <Link
+                        as="button"
+                        href={route("auth.create-data-rumah")}
+                        className="btn-primary w-full text-center flex items-center justify-center"
                     >
-                        <option value="1">10</option>
-                        <option value="20">20</option>
-                    </select>
+                        Tambah Katalog
+                    </Link>
                 </div>
                 <div>
                     <h1 className="text-secondary font-bold text-3xl lg:text-5xl">
@@ -98,7 +121,7 @@ export default function Index(props) {
                     </p>
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
+            <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-10">
                 {data.length > 0 &&
                     data.map((item, key) => (
                         <div className="overflow-hidden rounded-md shadow-sm shadow-gray-400/50">
@@ -106,7 +129,7 @@ export default function Index(props) {
                                 <img
                                     src={"/storage/" + item.foto_rumah}
                                     alt=""
-                                    className="w-full h-64 object-cover hover:scale-110 useTransition "
+                                    className="w-full h-24 object-cover hover:scale-110 useTransition "
                                 />
                                 <div className="absolute top-2 right-2 flex gap-1.5 justify-end items-center w-full">
                                     <Tooltip title="Show">
@@ -136,68 +159,68 @@ export default function Index(props) {
                                 </div>
                             </div>
                             <div className="px-4 py-6 text-gray-500">
-                                <h3 className="font-extrabold text-slate-500 text-xl my-3">
+                                <h3 className="font-extrabold text-slate-500 text-sm my-3">
                                     {new Intl.NumberFormat("id-ID", {
                                         style: "currency",
                                         currency: "IDR",
                                     }).format(item.harga_rumah)}
                                 </h3>
                                 <Link>
-                                    <h3 className="font-bold text-secondary text-xl mt-3 capitalize hover:text-slate-500 hover:cursor-pointer">
+                                    <h3 className="font-bold text-secondary text-sm mt-3 capitalize hover:text-slate-500 hover:cursor-pointer">
                                         {item.nama_rumah}
                                     </h3>
                                 </Link>
                                 <p>Block {item.blok_rumah}</p>
                             </div>
                             <div className="border-t border-dashed border-slate-500 px-4 flex w-full justify-between">
-                                <div className="w-full px-2 border-r border-dashed border-slate-500 text-gray-500 flex items-center gap-4  py-2">
-                                    <p className="text-xl text-slate-500 leading-3">
+                                <div className="w-full px-1 border-r border-dashed border-slate-500 text-gray-500 flex justify-center items-center gap-1 py-2">
+                                    <p className="text-xs text-slate-500 leading-3">
                                         <SquareFoot
                                             color="inherit"
                                             fontSize="inherit"
                                         />
                                     </p>
-                                    <p className="leading-3">
+                                    <p className="leading-3 text-xs">
                                         {item.luas_lahan} m2
                                     </p>
                                 </div>
-                                <div className="w-full px-2 border-r border-dashed border-slate-500 text-gray-500 flex items-center gap-4  py-2">
-                                    <p className="text-xl text-slate-500 leading-3">
+                                <div className="w-full px-1 border-r border-dashed border-slate-500 text-gray-500 flex justify-center items-center gap-1 py-2">
+                                    <p className="text-xs text-slate-500 leading-3">
                                         <Hotel
                                             color="inherit"
                                             fontSize="inherit"
                                         />
                                     </p>
                                     <p className="leading-3">
-                                        {item.luas_lahan} m2
+                                        {item.jumlah_kamar}
                                     </p>
                                 </div>
-                                <div className="w-full px-2 text-gray-500 flex items-center gap-4  py-2">
-                                    <p className="text-xl text-slate-500 leading-3">
+                                <div className="w-full px-1 text-gray-500 flex items-center gap-4 justify-center  py-2">
+                                    <p className="text-sm text-slate-500 leading-3">
                                         <Bathtub
                                             color="inherit"
                                             fontSize="inherit"
                                         />
                                     </p>
-                                    <p className="leading-3">
-                                        {item.luas_lahan} m2
+                                    <p className="leading-3 text-xs">
+                                        {item.jumlah_kamar_mandi}
                                     </p>
                                 </div>
                             </div>
                             <div className=" px-4 flex w-full justify-between">
-                                <div className="w-full px-2 border-r border-dashed border-slate-500 text-gray-500 flex items-center gap-4  py-2">
-                                    <p className="text-xl text-slate-500 leading-3">
+                                <div className="w-full px-1 border-r border-dashed border-slate-500 text-gray-500 flex justify-center items-center gap-1 py-2">
+                                    <p className="text-sm text-slate-500 leading-3">
                                         <LocalParking
                                             color="inherit"
                                             fontSize="inherit"
                                         />
                                     </p>
-                                    <p className="leading-3">
+                                    <p className="leading-3 text-xs flex">
                                         Parkiran
                                         {item.status_parkiran == "true" ? (
                                             <span
                                                 className={
-                                                    "text-xl text-slate-500 leading-3 mx-3"
+                                                    "text-xs text-slate-500 leading-3 mx-1"
                                                 }
                                             >
                                                 <CheckCircle
@@ -208,7 +231,7 @@ export default function Index(props) {
                                         ) : (
                                             <span
                                                 className={
-                                                    "text-xl text-red-500 leading-3 mx-3"
+                                                    "text-xs text-red-500 leading-3 mx-1"
                                                 }
                                             >
                                                 <Cancel
@@ -219,19 +242,19 @@ export default function Index(props) {
                                         )}
                                     </p>
                                 </div>
-                                <div className="w-full px-2 text-gray-500 flex items-center gap-4  py-2">
-                                    <p className="text-xl text-slate-500 leading-3">
+                                <div className="w-full px-1 text-gray-500 flex items-center gap-4 justify-center  py-2">
+                                    <p className="text-sm text-slate-500 leading-3">
                                         <Kitchen
                                             color="inherit"
                                             fontSize="inherit"
                                         />
                                     </p>
-                                    <p className="leading-3">
+                                    <p className="leading-3 text-xs">
                                         Dapur
                                         {item.status_dapur == "true" ? (
                                             <span
                                                 className={
-                                                    "text-xl text-slate-500 leading-3 mx-3"
+                                                    "text-xs text-slate-500 leading-3 mx-1"
                                                 }
                                             >
                                                 <CheckCircle
@@ -242,7 +265,7 @@ export default function Index(props) {
                                         ) : (
                                             <span
                                                 className={
-                                                    "text-xl text-red-500 leading-3 mx-3"
+                                                    "text-xs text-red-500 leading-3 mx-1"
                                                 }
                                             >
                                                 <Cancel

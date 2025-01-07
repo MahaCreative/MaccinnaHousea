@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('kode_bank')->unique();
             $table->string('nama_bank');
             $table->string('logo_bank');
-            $table->text('deskripsi');
-            $table->text('persyaratan');
             $table->timestamps();
         });
     }
