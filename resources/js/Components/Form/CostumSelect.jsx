@@ -36,13 +36,13 @@ export default function CostumSelect({
         >
             <p className="font-light text-teal-500 capitalize">{title}</p>
             <div className="form relative py-2 px-2  useTransition">
-                <p>{value ? value : placeholder}</p>
+                <p className="uppercase">{value ? value : placeholder}</p>
                 <div
                     className={`${
                         open
                             ? "max-h-[400px] border opacity-100 overflow-y-auto"
                             : "max-h-0 opacity-0 overflow-hidden"
-                    } useTransition absolute top-12 left-0 w-full border-teal-500 rounded-md bg-white  p-2 z-[30] `}
+                    } useTransition absolute top-12 left-0 min-w-[100px] max-w-[250px] border-teal-500 rounded-md bg-white  p-2 z-[30] `}
                 >
                     {children}
                 </div>

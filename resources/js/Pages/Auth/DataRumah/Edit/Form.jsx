@@ -1,7 +1,6 @@
 import AuthLayout from "@/Layouts/Admin/AuthLayout";
 import { Link, router, useForm } from "@inertiajs/react";
 import React, { useEffect, useRef, useState } from "react";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import {
@@ -22,10 +21,14 @@ import CurrencyInputs from "@/Components/Form/CurrencyInput";
 import SelectOption from "@/Components/Form/SelectOption";
 import CostumSelect from "@/Components/Form/CostumSelect";
 import useTipeActions from "@/Components/Function/TipeRumahFunction";
-import useBankKreditAction from "@/Components/Function/BankKreditFunction";
 
-export default function Form() {
+import FormKredit from "./FormKredit";
+import ResponseAlert from "@/Hooks/ResponseAlert";
+
+export default function Form({ rumah }) {
+    const { showResponse, ResponseMethode } = ResponseAlert();
     const { data, setData, post, reset, errors } = useForm({
+        id: "",
         tipe_rumah_id: "",
         tipe_rumah: "",
         kd_rumah: "",
@@ -41,18 +44,23 @@ export default function Form() {
         status_parkiran: "",
         status_dapur: "",
         keterangan: "",
-        thumbnail: "", //Foto Rumah Utama
-        foto_rumah: [], //Untuk Banyak Foto Rumah
+        thumbnail: "",
+        foto_rumah: "",
+        harga_kredit_id: [],
+        nama_bank: [],
 
         bank_kredit_id: [],
+
         harga_bangunan: [],
+
         uang_muka: [],
         harga_cicilan: [],
+
         jumlah_cicilan: [],
     });
     // hooks data tipe rumah
     const { submitTipe, deleteTipe, errorsTipe } = useTipeActions();
-    const { getDataBankKredit, dataBank } = useBankKreditAction();
+
     const [formTipe, setFormTipe] = useState({
         nama_tipe: "",
     });
@@ -73,7 +81,6 @@ export default function Form() {
         arrPreview.push(...newPreview);
         setPreviewImage(arrPreview);
     };
-
     const removeImage = (index) => {
         const dataImage = data.foto_rumah;
         dataImage.splice(index, 1);
@@ -96,17 +103,56 @@ export default function Form() {
         try {
             const respons = await axios.get(route("api-data-tipe"));
             setDataTipe(respons.data);
-        } catch (err) {
-            console.log(err.response);
-        }
+        } catch (err) {}
     };
-    const getDataBank = () => {
-        getDataBankKredit();
-    };
+
     useEffect(() => {
         getDataTipe();
-        getDataBank();
-        console.log(dataBank);
+        setPreviewImage(
+            rumah.foto.map((item, key) => "/storage/" + item.foto_rumah)
+        );
+        setData({
+            ...data,
+            id: rumah.id,
+            tipe_rumah_id: rumah.tipe.id,
+            tipe_rumah: rumah.tipe.nama_tipe,
+            kd_rumah: "",
+            nama_rumah: rumah.nama_rumah,
+            harga_rumah: rumah.harga_rumah,
+            blok_rumah: rumah.blok_rumah,
+            status_bangunan: rumah.status_bangunan,
+            status_milik: rumah.status_milik,
+            nama_pemilik: rumah.nama_pemilik,
+            jumlah_kamar: rumah.jumlah_kamar,
+            jumlah_kamar_mandi: rumah.jumlah_kamar_mandi,
+            luas_lahan: rumah.luas_lahan,
+            status_parkiran: rumah.status_parkiran,
+            status_dapur: rumah.status_dapur,
+            keterangan: rumah.keterangan,
+            thumbnail: rumah.foto_rumah, //Foto Rumah Utama
+            foto_rumah: rumah.foto, //Untuk Banyak Foto Rumah
+            harga_kredit_id: rumah.harga_kredit.map((item, key) => item.id),
+            nama_bank: rumah.harga_kredit.map(
+                (item, key) => item.bank.nama_bank
+            ),
+
+            bank_kredit_id: rumah.harga_kredit.map(
+                (item, key) => item.bank_kredit_id
+            ),
+
+            harga_bangunan: rumah.harga_kredit.map(
+                (item, key) => item.harga_bangunan
+            ),
+
+            uang_muka: rumah.harga_kredit.map((item, key) => item.uang_muka),
+            harga_cicilan: rumah.harga_kredit.map(
+                (item, key) => item.harga_cicilan
+            ),
+
+            jumlah_cicilan: rumah.harga_kredit.map(
+                (item, key) => item.jumlah_cicilan
+            ),
+        });
     }, []);
 
     const submitTipeRumah = async () => {
@@ -121,11 +167,69 @@ export default function Form() {
     const submitHandler = async (e) => {
         e.preventDefault();
 
-        post(route("auth.store-data-rumah"), data, {
-            preserveScroll: true,
-        });
+        ResponseMethode(
+            "warning",
+            "Submit",
+            "Apakah data yang anda masukkan sudah benar dan lengkap?",
+            () => {
+                if (
+                    data.bank_kredit_id[0] == undefined ||
+                    data.harga_bangunan[0] == undefined ||
+                    data.uang_muka[0] == undefined ||
+                    data.harga_cicilan[0] == undefined ||
+                    data.jumlah_cicilan[0] == undefined
+                ) {
+                    showResponse(
+                        "error",
+                        "Errors",
+                        "Gagal menambahkan data perumahan, silahkan lengkapi data kredit dengan benar"
+                    );
+                } else {
+                    post(route("auth.update-data-rumah"), {
+                        preserveScroll: true,
+
+                        onSuccess: () => {
+                            reset(
+                                "tipe_rumah_id",
+                                "tipe_rumah",
+                                "kd_rumah",
+                                "nama_rumah",
+                                "harga_rumah",
+                                "blok_rumah",
+                                "status_bangunan",
+                                "status_milik",
+                                "nama_pemilik",
+                                "jumlah_kamar",
+                                "jumlah_kamar_mandi",
+                                "luas_lahan",
+                                "status_parkiran",
+                                "status_dapur",
+                                "keterangan",
+                                "thumbnail",
+                                "foto_rumah",
+                                "nama_bank",
+                                "bank_kredit_id",
+                                "harga_bangunan",
+                                "uang_muka",
+                                "harga_cicilan",
+                                "jumlah_cicilan"
+                            );
+                            setPreviewImage([]);
+                            setThumbnailPrefiew(null);
+                        },
+                        onError: (err) => {
+                            showResponse(
+                                "error",
+                                "Errors!!!",
+                                "Gagal menambahkan data, silahkan periksa kembali isian yang anda masukkan!"
+                            );
+                        },
+                    });
+                }
+            },
+            () => {}
+        );
     };
-    console.log(errors);
 
     return (
         <form
@@ -145,7 +249,7 @@ export default function Form() {
                             src={
                                 thumbnailPreview
                                     ? thumbnailPreview
-                                    : "/storage/Image/default_image.avif"
+                                    : "/storage/" + data.thumbnail
                             }
                             alt=""
                             className="w-full h-[352px] object-cover"
@@ -498,7 +602,7 @@ export default function Form() {
                     </div>
                 </div>
             </div>
-            <button className="form">Upload Data Perumahan</button>
+
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -517,27 +621,24 @@ export default function Form() {
                         <th scope="col" class="px-6 py-3">
                             Jumlah Cicilan
                         </th>
+                        <th scope="col" class="px-6 py-3">
+                            Action
+                        </th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th
-                            scope="row"
-                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                            Apple MacBook Pro 17"
-                        </th>
-                        <td class="px-6 py-4">Silver</td>
-                        <td class="px-6 py-4">Laptop</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                </tbody>
+                <FormKredit setForm={setData} form={data} errors={errors} />
             </table>
             <div>
                 <QuillCompnent
+                    className="form-control"
                     value={data.keterangan}
                     onChange={(e) => setData({ ...data, keterangan: e })}
                 />
+            </div>
+            <div className="fixed bottom-0 w-full justify-center flex  left-0 ">
+                <button className="form bg-teal-500 text-white">
+                    Update Data Perumahan
+                </button>
             </div>
         </form>
     );

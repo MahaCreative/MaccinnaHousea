@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             TipeRumahSeeder::class,
+            BankKreditSeeder::class,
         ]);
         Rumah::factory(10)->create();
     }

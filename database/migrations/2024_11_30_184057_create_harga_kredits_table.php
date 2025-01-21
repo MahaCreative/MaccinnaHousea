@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('uang_muka');
             $table->integer('harga_cicilan');
             $table->integer('jumlah_cicilan');
+            $table->timestamps();
         });
     }
 

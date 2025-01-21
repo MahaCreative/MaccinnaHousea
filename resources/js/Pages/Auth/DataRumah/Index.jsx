@@ -1,3 +1,4 @@
+import ResponseAlert from "@/Hooks/ResponseAlert";
 import AuthLayout from "@/Layouts/Admin/AuthLayout";
 
 import { Link, router } from "@inertiajs/react";
@@ -20,6 +21,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 
 export default function Index(props) {
+    const { showResponse, ResponseMethode } = ResponseAlert();
     const { data: data } = props.dataRumah;
     const [dataTipe, setDataTipe] = useState([]);
     const [params, setParams] = useState({ load: "", tipe: "", cari: "" });
@@ -48,6 +50,41 @@ export default function Index(props) {
         []
     );
     useEffect(() => reload(params), [params]);
+    const deleteHandler = (id) => {
+        ResponseMethode(
+            "warning",
+            "Hapus Data!",
+            "Ingin menghapus data ini?. data yang dihapus tidak dapat dikembalikan.",
+            () => {
+                router.delete(route("auth.delete-data-rumah", id), {
+                    preserveScroll: () => true,
+                    onSuccess: () => {
+                        showResponse(
+                            "success",
+                            "Sukses",
+                            "Berhasil menghapus data rumah"
+                        );
+                    },
+                    onError: () => {},
+                });
+            },
+            () => {},
+            "Ya Hapus Data."
+        );
+    };
+
+    const editHandler = (id) => {
+        ResponseMethode(
+            "warning",
+            "Edit Data!",
+            "Yakin ngin mengedit data ini?.",
+            () => {
+                router.visit(route("auth.edit-data-rumah", id));
+            },
+            () => {},
+            "Ya Saya Yakin"
+        );
+    };
     return (
         <div className="px-4 md:px-8 lg:px-16 useTransition my-3">
             <div className="flex flex-col-reverse md:flex-row-reverse justify-between gap-3">
@@ -124,7 +161,10 @@ export default function Index(props) {
             <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-10">
                 {data.length > 0 &&
                     data.map((item, key) => (
-                        <div className="overflow-hidden rounded-md shadow-sm shadow-gray-400/50">
+                        <div
+                            key={key}
+                            className="overflow-hidden rounded-md shadow-sm shadow-gray-400/50"
+                        >
                             <div className="relative">
                                 <img
                                     src={"/storage/" + item.foto_rumah}
@@ -133,15 +173,24 @@ export default function Index(props) {
                                 />
                                 <div className="absolute top-2 right-2 flex gap-1.5 justify-end items-center w-full">
                                     <Tooltip title="Show">
-                                        <button className="bg-blue-500 p-2 rounded-md text-white font-light hover:bg-blue-600 useTransition tracking-tighter leading-3">
+                                        <Link
+                                            href={route(
+                                                "show-data-rumah",
+                                                item.id
+                                            )}
+                                            className="bg-blue-500 p-2 rounded-md text-white font-light hover:bg-blue-600 useTransition tracking-tighter leading-3"
+                                        >
                                             <RemoveRedEye
                                                 color="inherit"
                                                 fontSize="inherit"
                                             />
-                                        </button>
+                                        </Link>
                                     </Tooltip>
                                     <Tooltip title="Edit">
-                                        <button className="bg-orange-500 p-2 rounded-md text-white font-light hover:bg-orange-600 useTransition tracking-tighter leading-3">
+                                        <button
+                                            onClick={() => editHandler(item.id)}
+                                            className="bg-orange-500 p-2 rounded-md text-white font-light hover:bg-orange-600 useTransition tracking-tighter leading-3"
+                                        >
                                             <Edit
                                                 color="inherit"
                                                 fontSize="inherit"
@@ -149,7 +198,12 @@ export default function Index(props) {
                                         </button>
                                     </Tooltip>
                                     <Tooltip title="Delete">
-                                        <button className="bg-red-500 p-2 rounded-md text-white font-light hover:bg-red-600 useTransition tracking-tighter leading-3">
+                                        <button
+                                            onClick={() =>
+                                                deleteHandler(item.id)
+                                            }
+                                            className="bg-red-500 p-2 rounded-md text-white font-light hover:bg-red-600 useTransition tracking-tighter leading-3"
+                                        >
                                             <Delete
                                                 color="inherit"
                                                 fontSize="inherit"

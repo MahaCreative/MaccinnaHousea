@@ -23,4 +23,12 @@ class DataRumahController extends Controller
 
         return inertia('Guest/DataRumah/DataRumah', compact('dataRumah'));
     }
+
+    public function show(Request $request, $id)
+    {
+        $rumah = Rumah::with(['tipe', 'foto', 'harga_kredit' => function ($q) {
+            $q->with('bank');
+        }])->findOrFail($id);
+        return inertia('Guest/DataRumah/Show', compact('rumah'));
+    }
 }

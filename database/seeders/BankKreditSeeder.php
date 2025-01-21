@@ -13,10 +13,24 @@ class BankKreditSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('bank_kredits')->insert([
-            'kode_bank' => '001',
-            'nama_bank' => 'BRI',
-            'logo_bank' => '',
-        ]);
+        DB::table('bank_kredits')->insert(
+            [
+                [
+                    'kode_bank' => '001',
+                    'nama_bank' => 'BRI',
+                    'logo_bank' => 'LogoBank/bri.png',
+                ],
+                [
+                    'kode_bank' => '002',
+                    'nama_bank' => 'BNI',
+                    'logo_bank' => 'LogoBank/bni.png',
+                ],
+                [
+                    'kode_bank' => '003',
+                    'nama_bank' => 'BTN',
+                    'logo_bank' => 'LogoBank/btn.png',
+                ],
+            ]
+        );
     }
 }
