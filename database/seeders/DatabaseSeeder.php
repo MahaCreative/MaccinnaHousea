@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Rumah;
 use App\Models\TipeRumah;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        User::factory(50)->create();
         $this->call([
             TipeRumahSeeder::class,
             BankKreditSeeder::class,

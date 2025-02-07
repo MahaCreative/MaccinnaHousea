@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('avatar');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('role')->default('pelanggan');
+            $table->string('role')->default('pengunjung');
             $table->rememberToken();
             $table->timestamps();
         });

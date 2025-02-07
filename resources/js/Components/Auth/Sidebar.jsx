@@ -39,7 +39,7 @@ export default function Sidebar({ open, setOpen }) {
                     <Dashboard color="inherit" fontSize="inherit" />
                 </Links>
                 <h1 className="font-light text-white">Mater Data</h1>
-                <Links name={"User"}>
+                <Links href={route("auth.user")} name={"User"}>
                     <Group color="inherit" fontSize="inherit" />
                 </Links>
                 <Links

@@ -27,7 +27,7 @@ export default function AuthLayout({ children, title, prevRoute, ...props }) {
             {/* sidebar */}
             <Sidebar open={openSidebar} setOpen={setOpenSidebar} />
             <div className="py-5">
-                <div className="flex gap-3 items-center px-3 md:px-8 lg:px-16">
+                <div className="flex gap-3 items-center px-4 md:px-8 lg:px-16">
                     <Link
                         href={route("dashboard")}
                         className="text-lg text-teal-500"
