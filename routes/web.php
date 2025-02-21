@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Auth\DashboardController;
 use App\Http\Controllers\Auth\DataRumahController as AuthDataRumahController;
+use App\Http\Controllers\Auth\GaleryController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\DataBankKreditController;
 use App\Http\Controllers\HomeController;
@@ -68,3 +69,10 @@ Route::get('auth/data-user', [UserController::class, 'index'])->name('auth.user'
 Route::post('auth/create-data-user', [UserController::class, 'create'])->name('auth.create-data-user');
 Route::post('/auth/update-data-user', [UserController::class, 'update'])->name('auth.update-data-user');
 Route::delete('auth/delete-data-user/{id}', [UserController::class, 'delete'])->name('auth.delete-data-user');
+
+Route::get('auth/data-galery', [GaleryController::class, 'index'])->name('auth.data-galery');
+Route::get('auth/create-data-galery', [GaleryController::class, 'create'])->name('auth.create-data-galery');
+Route::post('auth/store-data-galery', [GaleryController::class, 'store'])->name('auth.store-data-galery');
+Route::get('auth/update-data-galery', [GaleryController::class, 'update'])->name('auth.update-data-galery');
+Route::post('auth/store-update-data-galery', [GaleryController::class, 'store_update'])->name('auth.store-update-data-galery');
+Route::delete('auth/delete-data-galery', [GaleryController::class, 'delete'])->name('auth.delete-data-galery');

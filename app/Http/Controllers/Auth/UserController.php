@@ -11,12 +11,13 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $queryAdmin = User::query()->where('role', '=', 'admin');
+        $queryPelanggan = User::query()->where('role', '=', 'pelanggan');
         if ($request->cariAdmin) {
             $queryAdmin->where('nama_lengkap', 'like', '%' . $request->cariAdmin . '%');
         }
         $admin = $queryAdmin->get();
-
-        return inertia('Auth/User/Index', compact('admin'));
+        $pelanggan = $queryPelanggan->get();
+        return inertia('Auth/User/Index', compact('admin', 'pelanggan'));
     }
 
     public function create(Request $request)

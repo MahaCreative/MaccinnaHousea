@@ -18,7 +18,8 @@ export default function Index(props) {
     const [tambahModal, setTambahModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const admin = props.admin;
-    const [params, setParams] = useState({ cariAdmin: "" });
+    const pelanggan = props.pelanggan;
+    const [params, setParams] = useState({ cariAdmin: "", cariPelanggan: "" });
     const [model, setModel] = useState([]);
     const reloadAdmin = useCallback(
         debounce((query) => {
@@ -143,6 +144,92 @@ export default function Index(props) {
                         <tbody>
                             {admin.length > 0 &&
                                 admin.map((item, key) => (
+                                    <tr key={key}>
+                                        <TableLayout.Td className="w-12">
+                                            {key + 1}
+                                        </TableLayout.Td>
+                                        <TableLayout.Td
+                                            key={key}
+                                            className="w-24"
+                                        >
+                                            <img
+                                                src={"/storage/" + item.avatar}
+                                                className="w-24 rounded-full h=24 object-cover"
+                                                alt=""
+                                            />
+                                        </TableLayout.Td>
+                                        <TableLayout.Td
+                                            key={key}
+                                            className="w-36"
+                                        >
+                                            {item.nama_lengkap}
+                                        </TableLayout.Td>
+                                        <TableLayout.Td
+                                            key={key}
+                                            className="w-36"
+                                        >
+                                            {item.email}
+                                        </TableLayout.Td>
+                                        <TableLayout.Td key={key} className="">
+                                            {item.no_hp}
+                                        </TableLayout.Td>
+                                        <TableLayout.Td key={key} className="">
+                                            <div className="flex gap-2 items-center">
+                                                <button
+                                                    onClick={() =>
+                                                        deleteHandler(item.id)
+                                                    }
+                                                    className="text-white py-1.5 px-1.5 rounded-md bg-red-500 hover:bg-red-600 useTransition"
+                                                >
+                                                    Delete
+                                                </button>
+                                                <button
+                                                    onClick={() =>
+                                                        editHandler(item)
+                                                    }
+                                                    className="text-white py-1.5 px-1.5 rounded-md bg-orange-500 hover:bg-orange-600 useTransition"
+                                                >
+                                                    Edit
+                                                </button>
+                                            </div>
+                                        </TableLayout.Td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </TableLayout.Table>
+                </TableLayout>
+            </div>
+            <div className="my-3">
+                <TableLayout>
+                    <div className="flex justify-between  items-center px-4 py-3">
+                        <h3 className="tracking-tighter font-light text-teal-500 text-2xl">
+                            Data Pelanggan Terdaftar
+                        </h3>
+                        <InputText
+                            onChange={(e) =>
+                                setParams({
+                                    ...params,
+                                    cariPelanggan: e.target.value,
+                                })
+                            }
+                            placeholder="Cari"
+                            className="w-1/6"
+                        />{" "}
+                    </div>
+                    <TableLayout.Table>
+                        <TableLayout.Thead>
+                            <tr>
+                                <TableLayout.Th>#</TableLayout.Th>
+                                <TableLayout.Th>Image</TableLayout.Th>
+                                <TableLayout.Th>Nama Lengkap</TableLayout.Th>
+                                <TableLayout.Th>Email</TableLayout.Th>
+                                <TableLayout.Th>Nomor Hp</TableLayout.Th>
+                                <TableLayout.Th>Aksi</TableLayout.Th>
+                            </tr>
+                        </TableLayout.Thead>
+                        <tbody>
+                            {pelanggan.length > 0 &&
+                                pelanggan.map((item, key) => (
                                     <tr key={key}>
                                         <TableLayout.Td className="w-12">
                                             {key + 1}
