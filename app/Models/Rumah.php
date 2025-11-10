@@ -13,11 +13,7 @@ class Rumah extends Model
         "kd_rumah",
         "nama_rumah",
         "harga_rumah",
-        "blok_rumah",
-        "status_bangunan",
-        "status_milik",
-        "nama_pemilik",
-        "geojson",
+        "jumlah_rumah",
         "jumlah_kamar",
         "jumlah_kamar_mandi",
         "luas_lahan",
@@ -25,6 +21,7 @@ class Rumah extends Model
         "status_dapur",
         "keterangan",
         "foto_rumah",
+        'blok'
     ];
 
     public function tipe()

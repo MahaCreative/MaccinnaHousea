@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('galeries', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('slug');
             $table->longText('kontent');
             $table->string('gambar');
+            $table->integer('views')->default(0);
             $table->timestamps();
         });
     }

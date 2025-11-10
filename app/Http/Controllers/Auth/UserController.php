@@ -17,7 +17,11 @@ class UserController extends Controller
         }
         $admin = $queryAdmin->get();
         $pelanggan = $queryPelanggan->get();
-        return inertia('Auth/User/Index', compact('admin', 'pelanggan'));
+        $count = [
+            'admin' =>  User::where('role', '=', 'admin')->count(),
+            'pelanggan' =>  User::where('role', '=', 'admin')->count(),
+        ];
+        return inertia('Auth/User/Index', compact('admin', 'pelanggan', 'count'));
     }
 
     public function create(Request $request)
@@ -27,7 +31,21 @@ class UserController extends Controller
             'no_hp' => "required|unique:users,no_hp",
             'avatar' => 'required',
             'email' => "required|unique:users,email",
+            'password' => 'required|alpha_dash|min:6'
         ]);
+        $foto = '/default_profile.png';
+        if ($request->hasFile('avatar')) {
+            $foto = $request->file('avatar')->store('Admin/profile');
+        }
+        $user = User::create([
+            'nama_lengkap' => $request->nama_lengkap,
+            'no_hp' => $request->no_hp,
+            'avatar' => $request->avatar,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => 'admin',
+        ]);
+        return redirect()->back();
     }
 
     public function update(Request $request)

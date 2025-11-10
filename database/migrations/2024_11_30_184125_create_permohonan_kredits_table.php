@@ -14,15 +14,16 @@ return new class extends Migration
         Schema::create('permohonan_kredits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rumah_id')->constrained('rumahs')->onDelete('cascade');
-            $table->foreignId('harga_kredit_id')->constrained('harga_kredits')->onDelete('cascade');
-            $table->foreignId('pengunjung_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('petugas_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('pengunjung_id')->nullable();
+            $table->foreignId('petugas_id')->nullable();
             $table->string('kode_permohonan');
             $table->date('tanggal_permohonan');
+            $table->string('nama_pemohon');
             $table->string('no_hp_pemohon');
-            $table->string('nama_petugas_melayani');
-            $table->string('no_hp_petugas');
-            $table->string('status_permohonan'); //menunggu konfirmasi, diterima, ditolak
+            $table->string('nama_petugas_melayani')->nullable();
+            $table->string('no_hp_petugas')->nullable();
+            $table->string('status_permohonan')->default('baru');  // baru, follow up, cancell, closing
+            $table->string('status_berkas')->nullable(); //menunggu konfirmasi, diterima, ditolak
             $table->date('tanggal_disetujui')->nullable();
             $table->timestamps();
         });

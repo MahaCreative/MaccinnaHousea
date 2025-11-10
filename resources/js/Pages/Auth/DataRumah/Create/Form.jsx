@@ -34,16 +34,16 @@ export default function Form() {
         kd_rumah: "",
         nama_rumah: "",
         harga_rumah: "",
-        blok_rumah: "",
-        status_bangunan: "",
-        status_milik: "",
-        nama_pemilik: "",
-        jumlah_kamar: "",
-        jumlah_kamar_mandi: "",
+
+        jumlah_rumah: "1",
+
+        jumlah_kamar: "2",
+        jumlah_kamar_mandi: "1",
         luas_lahan: "",
         status_parkiran: "",
         status_dapur: "",
         keterangan: "",
+        blok: "",
         thumbnail: "", //Foto Rumah Utama
         foto_rumah: [], //Untuk Banyak Foto Rumah
 
@@ -146,10 +146,9 @@ export default function Form() {
                                 "kd_rumah",
                                 "nama_rumah",
                                 "harga_rumah",
-                                "blok_rumah",
-                                "status_bangunan",
-                                "status_milik",
-                                "nama_pemilik",
+                                "blok",
+                                "jumlah_rumah",
+
                                 "jumlah_kamar",
                                 "jumlah_kamar_mandi",
                                 "luas_lahan",
@@ -167,11 +166,16 @@ export default function Form() {
                             );
                             setPreviewImage([]);
                             setThumbnailPrefiew(null);
+                            showResponse(
+                                "success",
+                                "Berhasil",
+                                "berhasil menambahkan data katalog rumah"
+                            );
                         },
                         onError: (err) => {
                             showResponse(
                                 "error",
-                                "Errors!!!",
+                                "Gagal",
                                 "Gagal menambahkan data, silahkan periksa kembali isian yang anda masukkan!"
                             );
                         },
@@ -181,6 +185,7 @@ export default function Form() {
             () => {}
         );
     };
+    console.log(data);
 
     return (
         <form
@@ -189,7 +194,7 @@ export default function Form() {
         >
             <div className="flex flex-col md:flex-row useTranstion gap-3">
                 <div className="w-full md:w-1/2 useTransition">
-                    <div className="relative w-full h-[352px] rounded-md border border-dashed border-teal-400 p-1 cursor-pointer">
+                    <div className="relative w-full h-[352px] rounded-md border border-dashed border-blue-400 p-1 cursor-pointer">
                         <input
                             type="file"
                             ref={thumbnailRef}
@@ -208,7 +213,7 @@ export default function Form() {
                         <button
                             type="button"
                             onClick={gantiThumbnail}
-                            className="absolute top-2 left-2 px-3 p-1.5 inline bg-teal-500 rounded-md text-white"
+                            className="absolute top-2 left-2 px-3 p-1.5 inline bg-blue-500 rounded-md text-white"
                         >
                             Ganti Thumbnail
                         </button>
@@ -277,7 +282,7 @@ export default function Form() {
                                 <button
                                     type="button"
                                     onClick={() => imageRef.current.click()}
-                                    className="w-full h-[90px] text-4xl font-bold tracking-tighter leading-3 text-white hover:bg-teal-700 bg-teal-500 useTransition rounded-md"
+                                    className="w-full h-[90px] text-4xl font-bold tracking-tighter leading-3 text-white hover:bg-blue-700 bg-blue-500 useTransition rounded-md"
                                 >
                                     <Add color="inherit" fontSize="inherit" />
                                 </button>
@@ -291,6 +296,7 @@ export default function Form() {
                     </h3>
                     <div className="flex gap-3 w-full">
                         <InputText
+                            className={"w-full"}
                             value={data.nama_rumah}
                             name="nama_rumah"
                             errors={errors.nama_rumah}
@@ -312,71 +318,8 @@ export default function Form() {
                                 setData({ ...data, harga_rumah: value })
                             }
                         />
-                        <InputText
-                            value={data.blok_rumah}
-                            name="blok_rumah"
-                            errors={errors.blok_rumah}
-                            onChange={(e) =>
-                                setData({ ...data, blok_rumah: e.target.value })
-                            }
-                            title={"Blok Rumah"}
-                        />
                     </div>
-                    <div className="flex gap-3">
-                        <SelectOption
-                            title={"Status Bangunan"}
-                            value={data.status_bangunan}
-                            name="status_bangunan"
-                            errors={errors.status_bangunan}
-                            onChange={(e) =>
-                                setData({
-                                    ...data,
-                                    status_bangunan: e.target.value,
-                                })
-                            }
-                        >
-                            <option value="">Pilih Status Bangunan</option>
-                            <option value="belum selesai">Belum Selesai</option>
-                            <option value="proses pembangunan">
-                                Proses Pembangunan
-                            </option>
-                            <option value="selesai">Selesai</option>
-                        </SelectOption>
-                        <SelectOption
-                            title={"Status Milik"}
-                            value={data.status_milik}
-                            name="status_milik"
-                            errors={errors.status_milik}
-                            onChange={(e) =>
-                                setData({
-                                    ...data,
-                                    status_milik: e.target.value,
-                                })
-                            }
-                        >
-                            <option value="">Pilih Status Milik</option>
-                            <option value="belum terjual">Belum Terjual</option>
-                            <option value="di pesan">Di Pesan</option>
-                            <option value="terjual">Terjual</option>
-                        </SelectOption>
-                    </div>
-                    {data.status_milik !== "belum terjual" && (
-                        <div className="flex gap-3">
-                            <InputText
-                                value={data.nama_pemilik}
-                                name="nama_pemilik"
-                                errors={errors.nama_pemilik}
-                                onChange={(e) =>
-                                    setData({
-                                        ...data,
-                                        nama_pemilik: e.target.value,
-                                    })
-                                }
-                                title={"Nama Pemilik"}
-                                type="text"
-                            />
-                        </div>
-                    )}
+
                     <div className="flex gap-3">
                         <InputText
                             value={data.jumlah_kamar}
@@ -413,6 +356,30 @@ export default function Form() {
                             }
                             title={"Luas Lahan"}
                             type="number"
+                        />
+                    </div>
+                    <div className="flex gap-3">
+                        <InputText
+                            title={"Jumlah Rumah"}
+                            name="jumlah_rumah"
+                            value={data.jumlah_rumah}
+                            errors={errors.jumlah_rumah}
+                            type={"number"}
+                            onChange={(e) =>
+                                setData({
+                                    ...data,
+                                    jumlah_rumah: e.target.value,
+                                })
+                            }
+                        />
+                        <InputText
+                            title={"Blok Rumah"}
+                            name="blok"
+                            value={data.blok}
+                            errors={errors.blok}
+                            onChange={(e) =>
+                                setData({ ...data, blok: e.target.value })
+                            }
                         />
                     </div>
                     <div className="flex gap-3">
@@ -495,7 +462,7 @@ export default function Form() {
                                                                 item.id,
                                                         })
                                                     }
-                                                    className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-teal-500 text-center justify-center items-center"
+                                                    className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-blue-500 text-center justify-center items-center"
                                                 >
                                                     <Tooltip
                                                         title={`Pilih Tipe ${item.nama_tipe}`}
@@ -539,7 +506,7 @@ export default function Form() {
                                 />
                                 <button
                                     onClick={submitTipeRumah}
-                                    className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-teal-500 text-center justify-center items-center"
+                                    className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-blue-500 text-center justify-center items-center"
                                 >
                                     <Tooltip title={`Tambahkan Tipe Rumah`}>
                                         <Check
@@ -554,25 +521,25 @@ export default function Form() {
                 </div>
             </div>
 
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table className="w-full text-sm text-left bg-blue-500">
+                <thead className="text-xs ">
                     <tr>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" className="px-6 py-3">
                             Bank Kredit
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" className="px-6 py-3">
                             Harga Rumah
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" className="px-6 py-3">
                             Uang Muka
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" className="px-6 py-3">
                             Harga Cicilan
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" className="px-6 py-3">
                             Jumlah Cicilan
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" className="px-6 py-3">
                             Action
                         </th>
                     </tr>
@@ -583,11 +550,13 @@ export default function Form() {
                 <QuillCompnent
                     className="form-control"
                     value={data.keterangan}
-                    onChange={(e) => setData({ ...data, keterangan: e })}
+                    onChange={(value) =>
+                        setData((data) => ({ ...data, keterangan: value }))
+                    }
                 />
             </div>
             <div className="fixed bottom-0 w-full justify-center flex  left-0 ">
-                <button className="form bg-teal-500 text-white">
+                <button className="form bg-blue-500 text-white">
                     Upload Data Perumahan
                 </button>
             </div>
@@ -602,7 +571,7 @@ Form.layout = (page) => (
         prevRoute={
             <Link
                 href=""
-                className="text-teal-500  text-lg useTransition hover:text-teal-700"
+                className="text-blue-500  text-lg useTransition hover:text-blue-700"
             >
                 Data Rumah
             </Link>

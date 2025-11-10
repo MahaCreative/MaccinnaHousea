@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('pesans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sender_id')->constrained('users');
-            $table->foreignId('receiver_id')->constrained('users');
-            $table->text('message');
-            $table->string('status')->default('mengirim'); //mengirim, diterima, dilihat
+            $table->string('kode_pesan');
+            $table->foreignId('pengunjung_id')->constrained('users');
+            $table->foreignId('petugas_id')->nullable();
+            $table->string('status_chat')->default('belum selesai');
             $table->timestamps();
         });
     }

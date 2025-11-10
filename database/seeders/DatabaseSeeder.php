@@ -22,12 +22,18 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        User::create([
+            'nama_lengkap' => 'Manager',
+            'no_hp' => '+6285334703299',
+            'avatar' => 'default_profile.jpg',
+            'email' => 'manager@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'super admin',
+        ]);
 
-        User::factory(50)->create();
         $this->call([
             TipeRumahSeeder::class,
             BankKreditSeeder::class,
         ]);
-        Rumah::factory(10)->create();
     }
 }

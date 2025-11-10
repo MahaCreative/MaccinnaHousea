@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-const QuillCompnent = ({ errors, ...props }) => {
+const QuillCompnent = ({ height = "300px", errors, ...props }) => {
     // Konfigurasi Toolbar
     const modules = {
         toolbar: [
@@ -40,16 +40,16 @@ const QuillCompnent = ({ errors, ...props }) => {
     ];
 
     return (
-        <div>
+        <>
             {errors && <p className="text-red-500 italic">{errors}</p>}
             <ReactQuill
                 {...props}
                 theme="snow"
                 modules={modules}
                 formats={formats}
-                style={{ height: "400px" }}
+                style={{ height: height }}
             />
-        </div>
+        </>
     );
 };
 

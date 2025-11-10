@@ -16,10 +16,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 export default function Dialogs({
     open,
-
     handleClose,
     title,
     children,
+    ...props
 }) {
     const dialogRef = useRef();
 
@@ -36,6 +36,7 @@ export default function Dialogs({
     }, []);
     return (
         <Dialog
+            {...props}
             open={open}
             TransitionComponent={Transition}
             keepMounted

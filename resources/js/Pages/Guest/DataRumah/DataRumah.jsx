@@ -97,7 +97,10 @@ export default function DataRumah(props) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
                 {data.length > 0 &&
                     data.map((item, key) => (
-                        <div className="overflow-hidden rounded-md shadow-sm shadow-gray-400/50">
+                        <div
+                            key={key}
+                            className="overflow-hidden rounded-md shadow-sm shadow-gray-400/50"
+                        >
                             <img
                                 src={"/storage/" + item.foto_rumah}
                                 alt=""
@@ -110,7 +113,7 @@ export default function DataRumah(props) {
                                         currency: "IDR",
                                     }).format(item.harga_rumah)}
                                 </h3>
-                                <Link>
+                                <Link href={route("show-data-rumah", item.id)}>
                                     <h3 className="font-bold text-secondary text-xl mt-3 capitalize hover:text-teal-500 hover:cursor-pointer">
                                         {item.nama_rumah}
                                     </h3>

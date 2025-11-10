@@ -17,14 +17,11 @@ return new class extends Migration
             $table->string('kd_rumah')->unique();
             $table->string('nama_rumah');
             $table->string('harga_rumah');
-            $table->string('blok_rumah');
-            $table->string('status_bangunan'); //selesai, proses pembangunan, belum selesai
-            $table->string('status_milik')->default('belum terjual'); //terjual, di pesan, belum terjual
-            $table->string('nama_pemilik')->nullable();
-            $table->string('geojson')->nullable();
             $table->integer('jumlah_kamar')->default(1);
             $table->integer('jumlah_kamar_mandi')->default(1);
             $table->string('luas_lahan');
+            $table->string('blok');
+            $table->integer('jumlah_rumah');
             $table->string('status_parkiran')->default('false');
             $table->string('status_dapur')->default('false');
             $table->longText('keterangan')->nullable();

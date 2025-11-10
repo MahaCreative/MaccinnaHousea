@@ -1,7 +1,7 @@
 import ResponseAlert from "@/Hooks/ResponseAlert";
 import AuthLayout from "@/Layouts/Admin/AuthLayout";
 
-import { Link, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import {
     Bathtub,
     Cancel,
@@ -21,6 +21,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 
 export default function Index(props) {
+    const { auth } = usePage().props;
     const { showResponse, ResponseMethode } = ResponseAlert();
     const { data: data } = props.dataRumah;
     const [dataTipe, setDataTipe] = useState([]);
@@ -103,9 +104,9 @@ export default function Index(props) {
                                         }
                                         className={`${
                                             params.tipe == item.id
-                                                ? "bg-slate-500 text-white"
+                                                ? "bg-blue-500 text-white"
                                                 : "text-secondary"
-                                        } h-12 py-3 px-4  rounded-md font-light hover:bg-slate-700 useTransition border-slate-500 border w-[120px] hover:text-white`}
+                                        } h-12 py-3 px-4  rounded-md font-light hover:bg-blue-700 useTransition border-blue-500 border w-[120px] hover:text-white`}
                                     >
                                         Tipe {item.nama_tipe}
                                     </button>
@@ -138,13 +139,15 @@ export default function Index(props) {
                             }
                         />
                     </div>
-                    <Link
-                        as="button"
-                        href={route("auth.create-data-rumah")}
-                        className="btn-primary w-full text-center flex items-center justify-center"
-                    >
-                        Tambah Katalog
-                    </Link>
+                    {auth.user.role == "super admin" && (
+                        <Link
+                            as="button"
+                            href={route("auth.create-data-rumah")}
+                            className="btn-primary w-full text-center flex items-center justify-center"
+                        >
+                            Tambah Katalog
+                        </Link>
+                    )}
                 </div>
                 <div>
                     <h1 className="text-secondary font-bold text-3xl lg:text-5xl">
@@ -171,64 +174,68 @@ export default function Index(props) {
                                     alt=""
                                     className="w-full h-24 object-cover hover:scale-110 useTransition "
                                 />
-                                <div className="absolute top-2 right-2 flex gap-1.5 justify-end items-center w-full">
-                                    <Tooltip title="Show">
-                                        <Link
-                                            href={route(
-                                                "show-data-rumah",
-                                                item.id
-                                            )}
-                                            className="bg-blue-500 p-2 rounded-md text-white font-light hover:bg-blue-600 useTransition tracking-tighter leading-3"
-                                        >
-                                            <RemoveRedEye
-                                                color="inherit"
-                                                fontSize="inherit"
-                                            />
-                                        </Link>
-                                    </Tooltip>
-                                    <Tooltip title="Edit">
-                                        <button
-                                            onClick={() => editHandler(item.id)}
-                                            className="bg-orange-500 p-2 rounded-md text-white font-light hover:bg-orange-600 useTransition tracking-tighter leading-3"
-                                        >
-                                            <Edit
-                                                color="inherit"
-                                                fontSize="inherit"
-                                            />
-                                        </button>
-                                    </Tooltip>
-                                    <Tooltip title="Delete">
-                                        <button
-                                            onClick={() =>
-                                                deleteHandler(item.id)
-                                            }
-                                            className="bg-red-500 p-2 rounded-md text-white font-light hover:bg-red-600 useTransition tracking-tighter leading-3"
-                                        >
-                                            <Delete
-                                                color="inherit"
-                                                fontSize="inherit"
-                                            />
-                                        </button>
-                                    </Tooltip>
-                                </div>
+                                {auth.user.role == "super admin" && (
+                                    <div className="absolute top-2 right-2 flex gap-1.5 justify-end items-center w-full">
+                                        <Tooltip title="Show">
+                                            <Link
+                                                href={route(
+                                                    "show-data-rumah",
+                                                    item.id
+                                                )}
+                                                className="bg-blue-500 p-2 rounded-md text-white font-light hover:bg-blue-600 useTransition tracking-tighter leading-3"
+                                            >
+                                                <RemoveRedEye
+                                                    color="inherit"
+                                                    fontSize="inherit"
+                                                />
+                                            </Link>
+                                        </Tooltip>
+                                        <Tooltip title="Edit">
+                                            <button
+                                                onClick={() =>
+                                                    editHandler(item.id)
+                                                }
+                                                className="bg-orange-500 p-2 rounded-md text-white font-light hover:bg-orange-600 useTransition tracking-tighter leading-3"
+                                            >
+                                                <Edit
+                                                    color="inherit"
+                                                    fontSize="inherit"
+                                                />
+                                            </button>
+                                        </Tooltip>
+                                        <Tooltip title="Delete">
+                                            <button
+                                                onClick={() =>
+                                                    deleteHandler(item.id)
+                                                }
+                                                className="bg-red-500 p-2 rounded-md text-white font-light hover:bg-red-600 useTransition tracking-tighter leading-3"
+                                            >
+                                                <Delete
+                                                    color="inherit"
+                                                    fontSize="inherit"
+                                                />
+                                            </button>
+                                        </Tooltip>
+                                    </div>
+                                )}
                             </div>
                             <div className="px-4 py-6 text-gray-500">
-                                <h3 className="font-extrabold text-slate-500 text-sm my-3">
+                                <h3 className="font-extrabold text-blue-500 text-sm my-3">
                                     {new Intl.NumberFormat("id-ID", {
                                         style: "currency",
                                         currency: "IDR",
                                     }).format(item.harga_rumah)}
                                 </h3>
-                                <Link>
-                                    <h3 className="font-bold text-secondary text-sm mt-3 capitalize hover:text-slate-500 hover:cursor-pointer">
+                                <Link href={route("show-data-rumah", item.id)}>
+                                    <h3 className="font-bold text-secondary text-sm mt-3 capitalize hover:text-blue-500 hover:cursor-pointer">
                                         {item.nama_rumah}
                                     </h3>
                                 </Link>
                                 <p>Block {item.blok_rumah}</p>
                             </div>
-                            <div className="border-t border-dashed border-slate-500 px-4 flex w-full justify-between">
-                                <div className="w-full px-1 border-r border-dashed border-slate-500 text-gray-500 flex justify-center items-center gap-1 py-2">
-                                    <p className="text-xs text-slate-500 leading-3">
+                            <div className="border-t border-dashed border-blue-500 px-4 flex w-full justify-between">
+                                <div className="w-full px-1 border-r border-dashed border-blue-500 text-gray-500 flex justify-center items-center gap-1 py-2">
+                                    <p className="text-xs text-blue-500 leading-3">
                                         <SquareFoot
                                             color="inherit"
                                             fontSize="inherit"
@@ -238,8 +245,8 @@ export default function Index(props) {
                                         {item.luas_lahan} m2
                                     </p>
                                 </div>
-                                <div className="w-full px-1 border-r border-dashed border-slate-500 text-gray-500 flex justify-center items-center gap-1 py-2">
-                                    <p className="text-xs text-slate-500 leading-3">
+                                <div className="w-full px-1 border-r border-dashed border-blue-500 text-gray-500 flex justify-center items-center gap-1 py-2">
+                                    <p className="text-xs text-blue-500 leading-3">
                                         <Hotel
                                             color="inherit"
                                             fontSize="inherit"
@@ -250,7 +257,7 @@ export default function Index(props) {
                                     </p>
                                 </div>
                                 <div className="w-full px-1 text-gray-500 flex items-center gap-4 justify-center  py-2">
-                                    <p className="text-sm text-slate-500 leading-3">
+                                    <p className="text-sm text-blue-500 leading-3">
                                         <Bathtub
                                             color="inherit"
                                             fontSize="inherit"
@@ -262,8 +269,8 @@ export default function Index(props) {
                                 </div>
                             </div>
                             <div className=" px-4 flex w-full justify-between">
-                                <div className="w-full px-1 border-r border-dashed border-slate-500 text-gray-500 flex justify-center items-center gap-1 py-2">
-                                    <p className="text-sm text-slate-500 leading-3">
+                                <div className="w-full px-1 border-r border-dashed border-blue-500 text-gray-500 flex justify-center items-center gap-1 py-2">
+                                    <p className="text-sm text-blue-500 leading-3">
                                         <LocalParking
                                             color="inherit"
                                             fontSize="inherit"
@@ -274,7 +281,7 @@ export default function Index(props) {
                                         {item.status_parkiran == "true" ? (
                                             <span
                                                 className={
-                                                    "text-xs text-slate-500 leading-3 mx-1"
+                                                    "text-xs text-blue-500 leading-3 mx-1"
                                                 }
                                             >
                                                 <CheckCircle
@@ -297,7 +304,7 @@ export default function Index(props) {
                                     </p>
                                 </div>
                                 <div className="w-full px-1 text-gray-500 flex items-center gap-4 justify-center  py-2">
-                                    <p className="text-sm text-slate-500 leading-3">
+                                    <p className="text-sm text-blue-500 leading-3">
                                         <Kitchen
                                             color="inherit"
                                             fontSize="inherit"
@@ -308,7 +315,7 @@ export default function Index(props) {
                                         {item.status_dapur == "true" ? (
                                             <span
                                                 className={
-                                                    "text-xs text-slate-500 leading-3 mx-1"
+                                                    "text-xs text-blue-500 leading-3 mx-1"
                                                 }
                                             >
                                                 <CheckCircle
@@ -341,7 +348,7 @@ export default function Index(props) {
                             ? setParams({ ...params, load: "" })
                             : setParams({ ...params, load: "all" })
                     }
-                    className="py-3 px-4 text-white font-light bg-slate-500 hover:bg-slate-600 useTransition rounded-md flex gap-3"
+                    className="py-3 px-4 text-white font-light bg-blue-500 hover:bg-blue-600 useTransition rounded-md flex gap-3"
                 >
                     <p>
                         <KeyboardDoubleArrowDown

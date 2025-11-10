@@ -8,6 +8,6 @@ class AboutController extends Controller
 {
     public function index()
     {
-        return inertia('About/About');
+        return inertia('Guest/About/About');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -25,9 +26,10 @@ class RegisterController extends Controller
         if ($request->file('avatar')) {
             $avatar = $request->file('avatar')->store('Profile');
         }
+        $attr['password'] = bcrypt($request->password);
         $attr['avatar'] = $avatar;
         $user = User::create($attr);
-
-        return redirect()->back();
+        Auth::login($user);
+        return redirect()->route('home');
     }
 }

@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('booking_kunjungans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('petugas_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('petugas_id')->nullable();
             $table->foreignId('pengunjung_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('rumah_id')->constrained('rumahs')->onDelete('cascade');
             $table->date('tanggal_kunjungan');
-            $table->string('status_booking')->default('menunggu konfirmasi'); //menunggu konfirmasi. diterima, ditolak
-            $table->string('no_petugas');
-            $table->string('no_pengunjung');
-            $table->integer('rating')->default(0);
+            $table->string('nama_pengunjung');
+            $table->string('nomor_pengunjung');
+            $table->tinyInteger('rating')->nullable();
+            $table->string('status_booking')->default('menunggu konfirmasi'); //menunggu konfirmasi. diterima, selesai, ditolak
             $table->timestamps();
         });
     }

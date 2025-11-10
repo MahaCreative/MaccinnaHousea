@@ -18,6 +18,7 @@ export default function Index(props) {
     const [tambahModal, setTambahModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const admin = props.admin;
+    const count = props.count;
     const pelanggan = props.pelanggan;
     const [params, setParams] = useState({ cariAdmin: "", cariPelanggan: "" });
     const [model, setModel] = useState([]);
@@ -87,32 +88,32 @@ export default function Index(props) {
             </Dialogs>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 useTransition">
                 <Card
-                    bgColor={"from-teal-500 to-teal-600"}
+                    bgColor={"from-blue-900 to-blue-900"}
                     icon={
                         <SupervisorAccountIcon
                             color="inherit"
                             fontSize="inherit"
                         />
                     }
-                    count={10}
+                    count={count.admin}
                     title={"Total Admin"}
                 />
                 <Card
-                    bgColor={"from-teal-500 to-teal-600"}
+                    bgColor={"from-blue-900 to-blue-900"}
                     icon={<AccountCircle color="inherit" fontSize="inherit" />}
-                    count={10}
+                    count={count.pelanggan}
                     title={"Total Pengunjung Terdaftar"}
                 />
             </div>
             <div className="my-3">
-                <h3 className="tracking-tighter font-light text-teal-500 text-2xl">
+                <h3 className="tracking-tighter font-light text-blue-900 text-2xl">
                     Data Petugas
                 </h3>
                 <TableLayout>
                     <div className="flex justify-between items-center px-4 py-3">
                         <button
                             onClick={() => setTambahModal(true)}
-                            className="flex gap-3 items-center py-2 px-4 rounded-md bg-blue-500 text-white leading-3 tracking-tighter"
+                            className="flex gap-3 items-center py-2 px-4 rounded-md bg-blue-900 text-white leading-3 tracking-tighter"
                         >
                             <p>
                                 <Add color="inherit" fontSize="inherit" />
@@ -173,7 +174,7 @@ export default function Index(props) {
                                         <TableLayout.Td key={key} className="">
                                             {item.no_hp}
                                         </TableLayout.Td>
-                                        <TableLayout.Td key={key} className="">
+                                        <TableLayout.Td className="">
                                             <div className="flex gap-2 items-center">
                                                 <button
                                                     onClick={() =>
@@ -202,7 +203,7 @@ export default function Index(props) {
             <div className="my-3">
                 <TableLayout>
                     <div className="flex justify-between  items-center px-4 py-3">
-                        <h3 className="tracking-tighter font-light text-teal-500 text-2xl">
+                        <h3 className="tracking-tighter font-light text-blue-900 text-2xl">
                             Data Pelanggan Terdaftar
                         </h3>
                         <InputText

@@ -2,6 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\BerkasPermohonan;
+use App\Models\BookingKunjungan;
+use App\Models\PermohonanKredit;
+use App\Models\Pesan;
+use App\Models\Rumah;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -30,12 +35,19 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+
+        // dd($pesan);
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
-            'ziggy' => fn () => [
+
+            'notif_permohonan' => PermohonanKredit::where('status_permohonan', '=', 'menunggu konfirmasi')->count(),
+            'notif_berkas' => BerkasPermohonan::where('status_berkas', '=', 'menunggu konfirmasi')->count(),
+            'notif_booking' => BookingKunjungan::where('status_booking', 'menunggu konfirmasi')->count(),
+            'rumah' => Rumah::with('tipe')->latest()->get(),
+            'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],

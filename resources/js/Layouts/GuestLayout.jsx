@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import MenuNav from "@/Components/MenuNav";
 import {
     CalendarMonth,
@@ -12,9 +12,15 @@ import {
     LocalPhone,
     LocationOn,
     Menu,
+    Send,
 } from "@mui/icons-material";
+import CostumColapse from "@/Components/Colapse";
+import InputText from "@/Components/Form/InputText";
+import Message from "./Message";
 
-export default function GuestLayout({ children, judul }) {
+export default function GuestLayout({ children, judul, props }) {
+    const { auth } = usePage().props;
+
     var settings = {
         dots: false,
         arrows: false,
@@ -88,8 +94,9 @@ export default function GuestLayout({ children, judul }) {
         }
     };
     return (
-        <>
+        <div className="relative">
             <Head title={judul} />
+
             <div className="w-full h-full relative overflow-hidden">
                 <div
                     ref={navbarResRef}
@@ -108,7 +115,7 @@ export default function GuestLayout({ children, judul }) {
                             <h1 className="text-green-500 text-xl font-bold">
                                 Macinna House
                             </h1>
-                            <div className="hidden md:flex gap-x-8 items-center">
+                            <div className="hidden lg:flex gap-x-8 items-center">
                                 <MenuNav
                                     menu={"Home"}
                                     active={"home"}
@@ -121,25 +128,78 @@ export default function GuestLayout({ children, judul }) {
                                 />
                                 <MenuNav
                                     menu={"Katalog Perumahan"}
-                                    active={"katalog-rumah"}
-                                    // href={route("")}
+                                    active={"data-rumah"}
+                                    href={route("data-rumah")}
                                 />
                                 <MenuNav
                                     menu={"Galery"}
                                     active={"galery"}
-                                    // href={route("")}
+                                    href={route("galery")}
                                 />
                                 <MenuNav
                                     menu={"Promosi"}
-                                    active={"galery"}
-                                    // href={route("")}
+                                    active={"promosi"}
+                                    href={route("promosi")}
                                 />
 
-                                <MenuNav
-                                    menu={"Login"}
-                                    active={"login"}
-                                    // href={route("")}
-                                />
+                                {auth.user ? (
+                                    <>
+                                        {auth.user.role == "pengunjung" ? (
+                                            <>
+                                                <MenuNav
+                                                    menu={"MyPermohonan Kredit"}
+                                                    active={
+                                                        "pengunjung.history-permohonan-kredit"
+                                                    }
+                                                    href={route(
+                                                        "pengunjung.history-permohonan-kredit"
+                                                    )}
+                                                />
+                                                <MenuNav
+                                                    menu={"MyBooking Kunjungan"}
+                                                    active={
+                                                        "pengunjung.history-kunjungan"
+                                                    }
+                                                    href={route(
+                                                        "pengunjung.history-kunjungan"
+                                                    )}
+                                                />
+                                                <MenuNav
+                                                    menu={"My Profile"}
+                                                    active={"profil-saya"}
+                                                    href={route("profile-saya")}
+                                                />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <MenuNav
+                                                    menu={"Dashboard"}
+                                                    active={"dashboard"}
+                                                    href={route(
+                                                        "auth.dashboard"
+                                                    )}
+                                                />
+                                                <MenuNav
+                                                    menu={"My Profile"}
+                                                    active={"profil-saya"}
+                                                    href={route("profile-saya")}
+                                                />
+                                            </>
+                                        )}
+                                        <MenuNav
+                                            method="POST"
+                                            menu={"Logout"}
+                                            active={"logout"}
+                                            href={route("logout")}
+                                        />
+                                    </>
+                                ) : (
+                                    <MenuNav
+                                        menu={"Login"}
+                                        active={"login"}
+                                        href={route("login")}
+                                    />
+                                )}
                             </div>
                             <button
                                 onClick={() => setShowMenu(!showMenu)}
@@ -150,8 +210,8 @@ export default function GuestLayout({ children, judul }) {
                         </div>
                         <div
                             className={`${
-                                showMenu ? "h-32" : "h-0"
-                            } overflow-hidden  useTransition flex md:hidden flex-col gap-y-3`}
+                                showMenu ? "h-full" : "h-0"
+                            } overflow-hidden  useTransition flex lg:hidden flex-col gap-y-3`}
                         >
                             <MenuNav
                                 menu={"Home"}
@@ -161,7 +221,7 @@ export default function GuestLayout({ children, judul }) {
                             <MenuNav
                                 menu={"About"}
                                 active={"about"}
-                                // href={route("")}
+                                href={route("about")}
                             />
                             <MenuNav
                                 menu={"Katalog Perumahan"}
@@ -171,19 +231,70 @@ export default function GuestLayout({ children, judul }) {
                             <MenuNav
                                 menu={"Galery"}
                                 active={"galery"}
-                                // href={route("")}
+                                href={route("galery")}
                             />
                             <MenuNav
                                 menu={"Promosi"}
-                                active={"galery"}
-                                // href={route("")}
+                                active={"promosi"}
+                                href={route("promosi")}
                             />
 
-                            <MenuNav
-                                menu={"Login"}
-                                active={"login"}
-                                // href={route("")}
-                            />
+                            {auth.user ? (
+                                <>
+                                    {auth.user.role == "pengunjung" ? (
+                                        <>
+                                            <MenuNav
+                                                menu={"My Permohonan Kredit"}
+                                                active={
+                                                    "pengunjung.history-permohonan-kredit"
+                                                }
+                                                href={route(
+                                                    "pengunjung.history-permohonan-kredit"
+                                                )}
+                                            />
+                                            <MenuNav
+                                                menu={"MyBooking Kunjungan"}
+                                                active={
+                                                    "pengunjung.history-kunjungan"
+                                                }
+                                                href={route(
+                                                    "pengunjung.history-kunjungan"
+                                                )}
+                                            />
+                                            <MenuNav
+                                                menu={"My Profile"}
+                                                active={"profil-saya"}
+                                                href={route("profile-saya")}
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <MenuNav
+                                                menu={"Dashboard"}
+                                                active={"dashboard"}
+                                                href={route("auth.dashboard")}
+                                            />
+                                            <MenuNav
+                                                menu={"My Profile"}
+                                                active={"profil-saya"}
+                                                href={route("profile-saya")}
+                                            />
+                                        </>
+                                    )}
+                                    <MenuNav
+                                        method="POST"
+                                        menu={"Logout"}
+                                        active={"logout"}
+                                        href={route("logout")}
+                                    />
+                                </>
+                            ) : (
+                                <MenuNav
+                                    menu={"Login"}
+                                    active={"login"}
+                                    href={route("login")}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>
@@ -198,12 +309,7 @@ export default function GuestLayout({ children, judul }) {
                                 untuk hidup bersama keluarga anda
                             </h1>
                             <p className="text-secondary font-light">
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Voluptatem magni quibusdam
-                                quas repudiandae! Sunt dolor consequuntur,
-                                facere est praesentium voluptatem tempora ut
-                                sit, aperiam eligendi veritatis! Harum
-                                aspernatur labore error!
+                                Temukan hunian nyaman di Maccinna House
                             </p>
                             <button className="py-3 font-medium rounded-md hover:bg-secondary  px-2 text-white bg-green-500">
                                 View More
@@ -257,6 +363,61 @@ export default function GuestLayout({ children, judul }) {
                 {/* end slider */}
             </div>
             {children}
+            {/* Pertanyaan Pengunjung */}
+            <div className="bg-secondary py-16 px-4 md:px-8 lg:px-24 useTransition">
+                <h1 className="font-light text-lg text-white tracking-tighter py-4">
+                    Maccinna House
+                </h1>
+                <h3 className="text-green-500 font-light tracking-tighter text-lg md:text-2xl lg:text-4xl">
+                    Frequently Asked Questions
+                </h3>
+                <div className="py-4">
+                    <CostumColapse
+                        title={
+                            "Apa saja keunggulan yang didapatkan dari Maccinna House?"
+                        }
+                        message={
+                            "Keunggulan yang didapatkan dari Maccinna House Surabaya adalah berada di pusat area residential Surabaya Barat, dilalui oleh jalur lingkar luar barat dan radial road, mempunyai fasilitas publik, hunian bebas polusi, mempunyai sistem keamanan 24 jam, hunian nyaman dan dari developer terpercaya."
+                        }
+                    />
+                    <CostumColapse
+                        title={"Dimana alamat lengkap Maccinna House?"}
+                        message={
+                            "Maccinna House berada di Office Park #11 CitraLand Utama Rd- CitraLand – Surabaya – 60219 Indonesia"
+                        }
+                    />
+                    <CostumColapse
+                        title={"Berapa harga rumah di Maccinna House?"}
+                        message={
+                            "Harga rumah di Maccinna House sangat beragam tergantung tipe unit rumah yang mau dibelikan. Untuk informasi selanjutnya Anda dapat menghubungi kami via live chat pada website Maccinna House setiap hari selama 24 jam."
+                        }
+                    />
+                    <CostumColapse
+                        title={
+                            "Apa saja metode pembayaran yang bisa dilakukan di Maccinna House?"
+                        }
+                        message={
+                            "Maccinna House adalah salah satu perumahan elit di Surabaya. Selain lokasinya yang strategis dan fasilitas yang lengkap, Maccinna House juga menyediakan berberapa metode pembayaran yang bisa dijadikan opsi saat membeli rumah. Diantaranya adalah cash keras, inhouse atau lewat skema cicilan kredit pembiayaan rumah (KPR)."
+                        }
+                    />
+                    <CostumColapse
+                        title={
+                            "Bank apa saja yang sudah berkerja sama dengan perumahan Maccinna House?"
+                        }
+                        message={
+                            "Bank yang sudah berkerja sama dengan perumahan Maccinna House Surabaya adalah BCA, Mandiri, BNI, CIMB NIAGA, OCBC NISP, PERMATA, MAYBANK, PANIN, UOB dan NOBU."
+                        }
+                    />
+                    <CostumColapse
+                        title={
+                            "Apakah ada promo yang sedang berlangsung di Maccinna House?"
+                        }
+                        message={
+                            "Untuk melihat promo yang sedang berlangsung, kamu bisa mengunjungi halaman promo Maccina House"
+                        }
+                    />
+                </div>
+            </div>
             {/* Contact Agent */}
 
             <div className=" my-3 mx-4 md:mx-8 lg:mx-16 py-6 p-4 flex flex-col md:flex-row justify-between items-start gap-x-4 border border-teal-500 border-dashed rounded-md">
@@ -282,10 +443,6 @@ export default function GuestLayout({ children, judul }) {
                         <button className="bg-teal-500 tracking-tighter text-xs md:text-base leading-3 text-white font-light p-5 rounded-md hover:bg-teal-700 useTransition flex gap-3 items-center">
                             <Call color="inherit" fontSize="inherit" />
                             <span>Hubungi Kami Sekarang</span>
-                        </button>
-                        <button className="bg-teal-950 tracking-tighter leading-3 text-xs md:text-base text-white font-light  p-5 rounded-md hover:bg-teal-700 useTransition flex gap-3 items-center">
-                            <CalendarMonth color="inherit" fontSize="inherit" />
-                            <span>Booking Kunjungan Sekarang</span>
                         </button>
                     </div>
                 </div>
@@ -347,7 +504,7 @@ export default function GuestLayout({ children, judul }) {
                             About
                         </Link>
                         <Link
-                            // href={route("galery")}
+                            href={route("galery")}
                             className={`${
                                 route().current() === "galery"
                                     ? "text-green-500 font-medium"
@@ -357,7 +514,7 @@ export default function GuestLayout({ children, judul }) {
                             Galery
                         </Link>
                         <Link
-                            // href={route("promosi")}
+                            href={route("promosi")}
                             className={`${
                                 route().current() === "promosi"
                                     ? "text-green-500 font-medium"
@@ -367,7 +524,7 @@ export default function GuestLayout({ children, judul }) {
                             Promosi
                         </Link>
                         <Link
-                            // href={route("katalog-perumahan")}
+                            href={route("data-rumah")}
                             className={`${
                                 route().current() === "katalog-perumahan"
                                     ? "text-green-500 font-medium"
@@ -376,6 +533,98 @@ export default function GuestLayout({ children, judul }) {
                         >
                             Katalog Perumahan
                         </Link>
+                        {auth.user ? (
+                            <>
+                                {auth.user.role == "pengunjung" ? (
+                                    <>
+                                        <Link
+                                            href={route(
+                                                "pengunjung.history-permohonan-kredit"
+                                            )}
+                                            className={`${
+                                                route().current() ===
+                                                "pengunjung.history-permohonan-kredit"
+                                                    ? "text-green-500 font-medium"
+                                                    : "text-gray-500 font-light"
+                                            } text-xs md:text-sm hover:text-green-500 hover:font-semibold useTransition`}
+                                        >
+                                            MyPermohonan Kredit
+                                        </Link>
+                                        <Link
+                                            href={route(
+                                                "pengunjung.history-kunjungan"
+                                            )}
+                                            className={`${
+                                                route().current() ===
+                                                "pengunjung.history-kunjungan"
+                                                    ? "text-green-500 font-medium"
+                                                    : "text-gray-500 font-light"
+                                            } text-xs md:text-sm hover:text-green-500 hover:font-semibold useTransition`}
+                                        >
+                                            MyBooking Kunjungan
+                                        </Link>
+                                        <Link
+                                            href={route("profile-saya")}
+                                            className={`${
+                                                route().current() ===
+                                                "profile-saya"
+                                                    ? "text-green-500 font-medium"
+                                                    : "text-gray-500 font-light"
+                                            } text-xs md:text-sm hover:text-green-500 hover:font-semibold useTransition`}
+                                        >
+                                            My Profile
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link
+                                            href={route("auth.dashboard")}
+                                            className={`${
+                                                route().current() ===
+                                                "guest.dashboard"
+                                                    ? "text-green-500 font-medium"
+                                                    : "text-gray-500 font-light"
+                                            } text-xs md:text-sm hover:text-green-500 hover:font-semibold useTransition`}
+                                        >
+                                            Dashboard Admin
+                                        </Link>
+                                        <Link
+                                            href={route("profile-saya")}
+                                            className={`${
+                                                route().current() ===
+                                                "profile-saya"
+                                                    ? "text-green-500 font-medium"
+                                                    : "text-gray-500 font-light"
+                                            } text-xs md:text-sm hover:text-green-500 hover:font-semibold useTransition`}
+                                        >
+                                            My Profile
+                                        </Link>
+                                    </>
+                                )}
+                                <Link
+                                    method="POST"
+                                    href={route("logout")}
+                                    className={`${
+                                        route().current() === "logout"
+                                            ? "text-green-500 font-medium"
+                                            : "text-gray-500 font-light"
+                                    } text-xs md:text-sm hover:text-green-500 hover:font-semibold useTransition`}
+                                >
+                                    Logout
+                                </Link>
+                            </>
+                        ) : (
+                            <Link
+                                href={route("login")}
+                                className={`${
+                                    route().current() === "login"
+                                        ? "text-green-500 font-medium"
+                                        : "text-gray-500 font-light"
+                                } text-xs md:text-sm hover:text-green-500 hover:font-semibold useTransition`}
+                            >
+                                Login
+                            </Link>
+                        )}
                     </div>
                 </div>
                 <div>
@@ -384,6 +633,6 @@ export default function GuestLayout({ children, judul }) {
                     </h1>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

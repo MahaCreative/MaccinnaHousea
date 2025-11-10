@@ -133,10 +133,10 @@ export default function FormKredit({ form, setForm, errors }) {
     };
     return (
         <tbody>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <tr class="bg-white border-b dark:bg-blue-800 dark:border-blue-700">
                 <th
                     scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-white"
                 >
                     <CostumSelect
                         value={multipleData.nama_bank}
@@ -190,7 +190,7 @@ export default function FormKredit({ form, setForm, errors }) {
                                                         bank_kredit_id: item.id,
                                                     })
                                                 }
-                                                className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-teal-500 text-center justify-center items-center"
+                                                className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-blue-500 text-center justify-center items-center"
                                             >
                                                 <Tooltip
                                                     title={`Pilih Tipe ${item.nama_bank}`}
@@ -237,7 +237,7 @@ export default function FormKredit({ form, setForm, errors }) {
                             <button
                                 type="button"
                                 onClick={tambahDataBank}
-                                className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-teal-500 text-center justify-center items-center"
+                                className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-blue-500 text-center justify-center items-center"
                             >
                                 <Tooltip title={`Tambahkan Bank Kredit`}>
                                     <Check color="inherit" fontSize="inherit" />
@@ -327,11 +327,11 @@ export default function FormKredit({ form, setForm, errors }) {
                 form.bank_kredit_id.map((item, key) => (
                     <tr
                         key={key}
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                        class="bg-white border-b dark:bg-blue-800 dark:border-blue-700"
                     >
                         <th
                             scope="row"
-                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                            class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-white"
                         >
                             <CostumSelect
                                 errors={errors[`bank_kredit.${key}`]}
@@ -429,7 +429,7 @@ export default function FormKredit({ form, setForm, errors }) {
                                                                     ),
                                                             })
                                                         }
-                                                        className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-teal-500 text-center justify-center items-center"
+                                                        className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-blue-500 text-center justify-center items-center"
                                                     >
                                                         <Tooltip
                                                             title={`Pilih Tipe ${item.nama_bank}`}

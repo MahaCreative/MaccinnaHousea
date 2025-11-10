@@ -7,6 +7,13 @@ export default function Index() {
         email: "",
         password: "",
     });
+    const loginHandler = (e) => {
+        e.preventDefault();
+        post(route("login"), {
+            onSuccess: () => {},
+            onError: () => {},
+        });
+    };
 
     return (
         <div className="px-4 md:px-8 lg:px-6">
@@ -14,7 +21,7 @@ export default function Index() {
                 <h1 className="text-4xl font-semibold text-green-500 mb-4 ">
                     Login
                 </h1>
-                <form action="" className="flex flex-col gap-3">
+                <form onSubmit={loginHandler} className="flex flex-col gap-3">
                     <InputText
                         title={"Email"}
                         name="email"
@@ -34,7 +41,7 @@ export default function Index() {
                         value={data.password}
                         errors={errors.password}
                         onChange={(e) =>
-                            setData({ ...data, email: e.target.value })
+                            setData({ ...data, password: e.target.value })
                         }
                     />
                     <div className="flex gap-3 items-center w-full mt-5">

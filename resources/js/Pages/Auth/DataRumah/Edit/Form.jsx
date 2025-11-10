@@ -34,10 +34,8 @@ export default function Form({ rumah }) {
         kd_rumah: "",
         nama_rumah: "",
         harga_rumah: "",
-        blok_rumah: "",
-        status_bangunan: "",
-        status_milik: "",
-        nama_pemilik: "",
+
+        jumlah_rumah: "",
         jumlah_kamar: "",
         jumlah_kamar_mandi: "",
         luas_lahan: "",
@@ -119,10 +117,8 @@ export default function Form({ rumah }) {
             kd_rumah: "",
             nama_rumah: rumah.nama_rumah,
             harga_rumah: rumah.harga_rumah,
-            blok_rumah: rumah.blok_rumah,
-            status_bangunan: rumah.status_bangunan,
-            status_milik: rumah.status_milik,
-            nama_pemilik: rumah.nama_pemilik,
+
+            jumlah_rumah: rumah.jumlah_rumah,
             jumlah_kamar: rumah.jumlah_kamar,
             jumlah_kamar_mandi: rumah.jumlah_kamar_mandi,
             luas_lahan: rumah.luas_lahan,
@@ -195,10 +191,8 @@ export default function Form({ rumah }) {
                                 "kd_rumah",
                                 "nama_rumah",
                                 "harga_rumah",
-                                "blok_rumah",
-                                "status_bangunan",
-                                "status_milik",
-                                "nama_pemilik",
+
+                                "jumlah_rumah",
                                 "jumlah_kamar",
                                 "jumlah_kamar_mandi",
                                 "luas_lahan",
@@ -340,6 +334,7 @@ export default function Form({ rumah }) {
                     </h3>
                     <div className="flex gap-3 w-full">
                         <InputText
+                            className={"w-full"}
                             value={data.nama_rumah}
                             name="nama_rumah"
                             errors={errors.nama_rumah}
@@ -361,71 +356,8 @@ export default function Form({ rumah }) {
                                 setData({ ...data, harga_rumah: value })
                             }
                         />
-                        <InputText
-                            value={data.blok_rumah}
-                            name="blok_rumah"
-                            errors={errors.blok_rumah}
-                            onChange={(e) =>
-                                setData({ ...data, blok_rumah: e.target.value })
-                            }
-                            title={"Blok Rumah"}
-                        />
                     </div>
-                    <div className="flex gap-3">
-                        <SelectOption
-                            title={"Status Bangunan"}
-                            value={data.status_bangunan}
-                            name="status_bangunan"
-                            errors={errors.status_bangunan}
-                            onChange={(e) =>
-                                setData({
-                                    ...data,
-                                    status_bangunan: e.target.value,
-                                })
-                            }
-                        >
-                            <option value="">Pilih Status Bangunan</option>
-                            <option value="belum selesai">Belum Selesai</option>
-                            <option value="proses pembangunan">
-                                Proses Pembangunan
-                            </option>
-                            <option value="selesai">Selesai</option>
-                        </SelectOption>
-                        <SelectOption
-                            title={"Status Milik"}
-                            value={data.status_milik}
-                            name="status_milik"
-                            errors={errors.status_milik}
-                            onChange={(e) =>
-                                setData({
-                                    ...data,
-                                    status_milik: e.target.value,
-                                })
-                            }
-                        >
-                            <option value="">Pilih Status Milik</option>
-                            <option value="belum terjual">Belum Terjual</option>
-                            <option value="di pesan">Di Pesan</option>
-                            <option value="terjual">Terjual</option>
-                        </SelectOption>
-                    </div>
-                    {data.status_milik !== "belum terjual" && (
-                        <div className="flex gap-3">
-                            <InputText
-                                value={data.nama_pemilik}
-                                name="nama_pemilik"
-                                errors={errors.nama_pemilik}
-                                onChange={(e) =>
-                                    setData({
-                                        ...data,
-                                        nama_pemilik: e.target.value,
-                                    })
-                                }
-                                title={"Nama Pemilik"}
-                                type="text"
-                            />
-                        </div>
-                    )}
+
                     <div className="flex gap-3">
                         <InputText
                             value={data.jumlah_kamar}
@@ -461,9 +393,18 @@ export default function Form({ rumah }) {
                                 setData({ ...data, luas_lahan: e.target.value })
                             }
                             title={"Luas Lahan"}
-                            type="number"
                         />
                     </div>
+                    <InputText
+                        title={"Jumlah Rumah"}
+                        name="jumlah_rumah"
+                        value={data.jumlah_rumah}
+                        errors={errors.jumlah_rumah}
+                        type="number"
+                        onChange={(e) =>
+                            setData({ ...data, jumlah_rumah: e.target.value })
+                        }
+                    />
                     <div className="flex gap-3">
                         <SelectOption
                             title={"Status Parkiran"}

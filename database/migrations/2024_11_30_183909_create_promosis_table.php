@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('promosis', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('slug');
             $table->longText('kontent');
             $table->string('gambar');
             $table->timestamps();

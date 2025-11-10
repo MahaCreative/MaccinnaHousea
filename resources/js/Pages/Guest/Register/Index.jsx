@@ -2,7 +2,9 @@ import InputText from "@/Components/Form/InputText";
 import GuestLayout from "@/Layouts/GuestLayout";
 import React from "react";
 import { useForm, Link } from "@inertiajs/react";
+import ResponseAlert from "@/Hooks/ResponseAlert";
 export default function Index() {
+    const { showResponse } = ResponseAlert();
     const { data, setData, post, reset, errors } = useForm({
         nama_lengkap: "",
         no_hp: "",
@@ -13,7 +15,23 @@ export default function Index() {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        post(route("store.register"));
+        post(route("store.register"), {
+            onSuccess: () => {
+                showResponse(
+                    "success",
+                    "Berhasil",
+                    "Register berhasil dilakukan, dan anda telah berhasil login"
+                );
+            },
+            onError: (err) => {
+                showResponse(
+                    "error",
+                    "Gagal",
+                    "Register gagal dilakukan, silahkan periksa kembali isian anda. Error Code: " +
+                        err
+                );
+            },
+        });
     };
     return (
         <div className="px-4 md:px-8 lg:px-6">
@@ -24,6 +42,7 @@ export default function Index() {
                 <form action="" onSubmit={submitHandler}>
                     <div className="flex justify-between items-center gap-2">
                         <InputText
+                            className={"w-full"}
                             name="nama_lengkap"
                             type="text"
                             placeholder="Nama Lengkap"
@@ -38,6 +57,7 @@ export default function Index() {
                             }
                         />
                         <InputText
+                            className={"w-full"}
                             name="no_hp"
                             type="text"
                             placeholder="Nomor Hp"

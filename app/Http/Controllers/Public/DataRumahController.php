@@ -18,7 +18,7 @@ class DataRumahController extends Controller
                 $load = $request->load;
             }
         }
-        $query = Rumah::query()->with('tipe');
+        $query = Rumah::query()->with(['tipe', 'foto']);
         $dataRumah = $query->paginate($load);
 
         return inertia('Guest/DataRumah/DataRumah', compact('dataRumah'));

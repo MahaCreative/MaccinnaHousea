@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\DetailRumah;
 use App\Models\FotoRumah;
 use App\Models\HargaKredit;
 use App\Models\Rumah;
@@ -26,6 +27,9 @@ class DataRumahController extends Controller
         if ($request->cari) {
             $query->where('nama_rumah', 'like', '%' . $request->cari . '%');
         }
+        if ($request->tipe) {
+            $query->where('tipe_rumah_id', $request->tipe);
+        }
         $dataRumah = $query->paginate($load);
 
         return inertia('Auth/DataRumah/Index', compact('dataRumah'));
@@ -45,20 +49,17 @@ class DataRumahController extends Controller
         $kode = $countRumah < 10 ? "0" : "00";
         $kd_rumah = $kode . $countRumah + 1;
         $request->validate([
-            "tipe_rumah_id" => 'required|in:' . $dataTipe,
+            "tipe_rumah_id" => 'required',
             "nama_rumah" => 'string|min:3|max:50',
             "harga_rumah" => 'required|numeric',
-            "blok_rumah" => 'required|min:2|max:4|unique:rumahs,blok_rumah',
-            "status_bangunan" => 'required',
-            "status_milik" => 'required',
-            "nama_pemilik" => $request->status_milik !== 'belum terjual' ? 'required' : 'nullable',
-            "jumlah_kamar" => 'required|numeric',
+            "jumlah_kamar" => 'required|numeric|min:1',
             "jumlah_kamar_mandi" => 'required|numeric',
             "luas_lahan" => 'required|numeric',
             "status_parkiran" => 'required',
             "status_dapur" => 'required',
             "keterangan" => 'nullable|string',
             "thumbnail" => 'required|image|mimes:jpg,png,jpeg',
+            "blok" => 'required|string|max:1|unique:rumahs,blok',
             "foto_rumah.*" => 'required|image|mimes:jpg,png,jpeg|max:2048',
             "bank_kredit_id.*" => 'required|numeric',
             "harga_bangunan.*" => 'required|numeric',
@@ -75,21 +76,18 @@ class DataRumahController extends Controller
                 "kd_rumah" => $kd_rumah,
                 "nama_rumah" => $request->nama_rumah,
                 "harga_rumah" => $request->harga_rumah,
-                "blok_rumah" => $request->blok_rumah,
-                "status_bangunan" => $request->status_bangunan,
-                "status_milik" => $request->status_milik,
-                "nama_pemilik" => $request->nama_pemilik,
-                "geojson" => $request->geojson,
+                "jumlah_rumah" => $request->jumlah_rumah,
                 "jumlah_kamar" => $request->jumlah_kamar,
                 "jumlah_kamar_mandi" => $request->jumlah_kamar_mandi,
                 "luas_lahan" => $request->luas_lahan,
+                "blok" => $request->blok,
                 "status_parkiran" => $request->status_parkiran,
                 "status_dapur" => $request->status_dapur,
                 "keterangan" => $request->keterangan,
                 "foto_rumah" => $fotoThumbnail,
             ]);
             foreach ($request->foto_rumah as $foto) {
-                $fotoRumah = $foto->store($rumah->nama_rumah);
+                $fotoRumah = $foto->store('foto_rumah');
                 FotoRumah::create([
                     'rumah_id' => $rumah->id,
                     'foto_rumah' => $fotoRumah,
@@ -105,8 +103,15 @@ class DataRumahController extends Controller
                     "jumlah_cicilan" => $request->jumlah_cicilan[$i],
                 ]);
             }
+            for ($i = 0; $i < $rumah->jumlah_rumah; $i++) {
+                DetailRumah::create([
+                    'rumah_id' => $rumah->id,
+                    'blok_rumah' => $rumah->blok . '/' . $i + 1,
+                ]);
+            }
             DB::commit();
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -152,23 +157,19 @@ class DataRumahController extends Controller
                 'jumlah_cicilan' => $request->jumlah_cicilan[$key],
             ]);
         }
-        // $rumah->update([
-        //     "tipe_rumah_id" => $request->tipe_rumah_id,
-        //     "nama_rumah" => $request->nama_rumah,
-        //     "harga_rumah" => $request->harga_rumah,
-        //     "blok_rumah" => $request->blok_rumah,
-        //     "status_bangunan" => $request->status_bangunan,
-        //     "status_milik" => $request->status_milik,
-        //     "nama_pemilik" => $request->nama_pemilik,
-        //     "geojson" => $request->geojson,
-        //     "jumlah_kamar" => $request->jumlah_kamar,
-        //     "jumlah_kamar_mandi" => $request->jumlah_kamar_mandi,
-        //     "luas_lahan" => $request->luas_lahan,
-        //     "status_parkiran" => $request->status_parkiran,
-        //     "status_dapur" => $request->status_dapur,
-        //     "keterangan" => $request->keterangan,
-        //     "foto_rumah" => $thumbnail,
-        // ]);
+        $rumah->update([
+            "tipe_rumah_id" => $request->tipe_rumah_id,
+            "nama_rumah" => $request->nama_rumah,
+            "harga_rumah" => $request->harga_rumah,
+            "jumlah_rumah" => $request->jumlah_rumah,
+            "jumlah_kamar" => $request->jumlah_kamar,
+            "jumlah_kamar_mandi" => $request->jumlah_kamar_mandi,
+            "luas_lahan" => $request->luas_lahan,
+            "status_parkiran" => $request->status_parkiran,
+            "status_dapur" => $request->status_dapur,
+            "keterangan" => $request->keterangan,
+            "foto_rumah" => $thumbnail,
+        ]);
         return redirect()->back();
     }
 

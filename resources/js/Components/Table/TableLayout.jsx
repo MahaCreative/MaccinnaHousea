@@ -11,9 +11,7 @@ function TableLayout({ children, className }) {
 }
 function Table({ children, className }) {
     return (
-        <table
-            className={`w-full text-sm text-left rtl:text-right text-gray-500 ${className}`}
-        >
+        <table className={`w-full text-sm text-left text-primary ${className}`}>
             {children}
         </table>
     );
@@ -21,7 +19,7 @@ function Table({ children, className }) {
 function Thead({ children, className }) {
     return (
         <thead
-            className={`text-xs text-gray-700 uppercase  dark:bg-gray-700 dark:text-gray-400 ${className}`}
+            className={`text-xs text-white   bg-primary capitalize  ${className}`}
         >
             {children}
         </thead>
@@ -30,15 +28,15 @@ function Thead({ children, className }) {
 
 function Th({ children, className }) {
     return (
-        <th scope="col" className={`${className} px-6 py-3`}>
+        <th scope="col" className={`${className} px-6 py-3 capitalize`}>
             {children}
         </th>
     );
 }
 
-function Td({ children, className = "w-full" }) {
+function Td({ children, className = "w-full", ...props }) {
     return (
-        <td className={`${className} px-6 py-4 whitespace-nowrap`}>
+        <td {...props} className={`${className} px-6 py-4 capitalize`}>
             {children}
         </td>
     );

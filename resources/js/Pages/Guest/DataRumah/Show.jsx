@@ -1,5 +1,5 @@
 import AuthLayout from "@/Layouts/Admin/AuthLayout";
-import { Link, router, useForm } from "@inertiajs/react";
+import { Link, router, useForm, usePage } from "@inertiajs/react";
 import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -13,7 +13,7 @@ import {
     Edit,
     PlusOneSharp,
 } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
+import { Dialog, Tooltip } from "@mui/material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import QuillCompnent from "@/Components/Form/QuilComponent";
@@ -24,13 +24,19 @@ import CostumSelect from "@/Components/Form/CostumSelect";
 
 import ResponseAlert from "@/Hooks/ResponseAlert";
 import GuestLayout from "@/Layouts/GuestLayout";
+import Dialogs from "@/Components/Dialog";
+import Form from "./FormKunjungan/Form";
+import FormKredit from "./FormPermohonanKredit/FormKredit";
 
 export default function Show(props) {
     const { showResponse, ResponseMethode } = ResponseAlert();
+
+    const { auth } = usePage().props;
     const rumah = props.rumah;
-    console.log("====================================");
-    console.log(rumah);
-    console.log("====================================");
+    const [showImage, setShowImage] = useState(false);
+    const [image, setImage] = useState(null);
+    const [modalKunjungan, setModalKunjungan] = useState(false);
+    const [modalOrder, setModalOrder] = useState(false);
     const getDataTipe = async () => {
         try {
             const respons = await axios.get(route("api-data-tipe"));
@@ -44,9 +50,40 @@ export default function Show(props) {
 
     return (
         <div className="py-6 px-4 md:px-8 lg:px-16 useTransition">
+            <Dialog open={modalOrder} onClose={() => setModalOrder(false)}>
+                <FormKredit setModal={setModalOrder} rumah={rumah} />
+            </Dialog>
+            <Dialog
+                open={showImage}
+                onClose={() => {
+                    setShowImage(false);
+                    setImage(null);
+                }}
+            >
+                <img src={"/storage/" + image} alt="" />
+            </Dialog>
+            <Dialogs
+                title={"Atur Jadwal Kunjungan"}
+                open={modalKunjungan}
+                handleClose={() => setModalKunjungan(false)}
+            >
+                <p>
+                    Untuk mengatur jadwal kunjungan, silahkan masukkan Informasi
+                    Tanggal Kunjungan dan Nomor HP Anda. Kami akan segera
+                    menghubungi anda jika permintaan kunjungan anda telah
+                    disetujui oleh admin
+                </p>
+                <Form setModal={setModalKunjungan} rumah_id={rumah.id} />
+            </Dialogs>
             <div className="flex flex-col md:flex-row useTranstion gap-3">
                 <div className="w-full md:w-1/2 useTransition">
-                    <div className="relative w-full h-[352px] rounded-md border border-dashed border-teal-400 p-1 cursor-pointer">
+                    <div
+                        onClick={() => {
+                            setShowImage(true);
+                            setImage(rumah.foto_rumah);
+                        }}
+                        className="relative w-full h-[352px] rounded-md border border-dashed border-teal-400 p-1 cursor-pointer"
+                    >
                         <img
                             src={"/storage/" + rumah.foto_rumah}
                             alt=""
@@ -59,8 +96,12 @@ export default function Show(props) {
                             {rumah.foto.length > 0 ? (
                                 rumah.foto.map((item, index) => (
                                     <div
+                                        onClick={() => {
+                                            setShowImage(true);
+                                            setImage(item.foto_rumah);
+                                        }}
                                         key={index}
-                                        className="relative w-full h-[90px]  flex justify-center items-center "
+                                        className="relative w-full h-[90px]  flex justify-center items-center hover:cursor-pointer"
                                     >
                                         <img
                                             src={"/storage/" + item.foto_rumah}
@@ -89,6 +130,7 @@ export default function Show(props) {
                     </h3>
                     <div className="flex gap-3 w-full">
                         <InputText
+                            className={"w-full"}
                             disabled
                             value={rumah.nama_rumah}
                             name="nama_rumah"
@@ -103,46 +145,8 @@ export default function Show(props) {
                             value={rumah.harga_rumah}
                             prefix="Rp. "
                         />
-                        <InputText
-                            value={rumah.blok_rumah}
-                            disabled
-                            title={"Blok Rumah"}
-                        />
                     </div>
-                    <div className="flex gap-3">
-                        <SelectOption
-                            title={"Status Bangunan"}
-                            value={rumah.status_bangunan}
-                            disabled
-                        >
-                            <option value="">Pilih Status Bangunan</option>
-                            <option value="belum selesai">Belum Selesai</option>
-                            <option value="proses pembangunan">
-                                Proses Pembangunan
-                            </option>
-                            <option value="selesai">Selesai</option>
-                        </SelectOption>
-                        <SelectOption
-                            title={"Status Milik"}
-                            value={rumah.status_milik}
-                            disabled
-                        >
-                            <option value="">Pilih Status Milik</option>
-                            <option value="belum terjual">Belum Terjual</option>
-                            <option value="di pesan">Di Pesan</option>
-                            <option value="terjual">Terjual</option>
-                        </SelectOption>
-                    </div>
-                    {rumah.status_milik !== "belum terjual" && (
-                        <div className="flex gap-3">
-                            <InputText
-                                value={rumah.nama_pemilik}
-                                disabled
-                                title={"Nama Pemilik"}
-                                type="text"
-                            />
-                        </div>
-                    )}
+
                     <div className="flex gap-3">
                         <InputText
                             value={rumah.jumlah_kamar}
@@ -165,114 +169,46 @@ export default function Show(props) {
                         />
                     </div>
                     <div className="flex gap-3">
-                        <SelectOption
+                        <InputText
+                            disabled
                             title={"Status Parkiran"}
-                            value={rumah.status_parkiran}
+                            value={
+                                rumah.status_parkiran == "true"
+                                    ? "Ada"
+                                    : "Tidak Ada"
+                            }
+                        />
+                        <InputText
                             disabled
-                        >
-                            <option value="">Pilih Status Parkiran</option>
-                            <option value="false">Tidak Ada</option>
-                            <option value="true">Ada</option>
-                        </SelectOption>
-                        <SelectOption
                             title={"Status Dapur"}
-                            value={rumah.status_dapur}
+                            value={
+                                rumah.status_dapur == "true"
+                                    ? "Ada"
+                                    : "Tidak Ada"
+                            }
+                        />
+                        <InputText
                             disabled
-                        >
-                            <option value="">Pilih Status Dapur</option>
-                            <option value="false">Tidak Ada</option>
-                            <option value="true">Ada</option>
-                        </SelectOption>
-                        <CostumSelect
-                            placeholder={"Pilih Tipe Rumah"}
-                            title="Tipe Rumah"
-                            value={rumah.tipe_rumah}
-                        >
-                            {/* {dataTipe.length > 0 &&
-                                dataTipe.map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex gap-4 items-center tracking-tighter leading-3 my-2"
-                                    >
-                                        <p>{item.nama_tipe}</p>
-                                        <div className="flex gap-2 items-center">
-                                            {rumah.tipe_rumah_id == item.id ? (
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        setData({
-                                                            ...data,
-                                                            tipe_rumah: "",
-                                                            tipe_rumah_id: "",
-                                                        })
-                                                    }
-                                                    className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-red-500 text-center justify-center items-center"
-                                                >
-                                                    <Tooltip
-                                                        title={`Batal Pilih Tipe ${item.nama_tipe}`}
-                                                    >
-                                                        <Close
-                                                            color="inherit"
-                                                            fontSize="inherit"
-                                                        />
-                                                    </Tooltip>
-                                                </button>
-                                            ) : (
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        setData({
-                                                            ...data,
-                                                            tipe_rumah:
-                                                                item.nama_tipe,
-                                                            tipe_rumah_id:
-                                                                item.id,
-                                                        })
-                                                    }
-                                                    className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-teal-500 text-center justify-center items-center"
-                                                >
-                                                    <Tooltip
-                                                        title={`Pilih Tipe ${item.nama_tipe}`}
-                                                    >
-                                                        <Check
-                                                            color="inherit"
-                                                            fontSize="inherit"
-                                                        />
-                                                    </Tooltip>
-                                                </button>
-                                            )}
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    deleteTipeRumah(item.id)
-                                                }
-                                                className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-red-500 text-center justify-center items-center"
-                                            >
-                                                <Tooltip
-                                                    title={`Hapus Tipe ${item.nama_tipe}`}
-                                                >
-                                                    <DeleteForever
-                                                        color="inherit"
-                                                        fontSize="inherit"
-                                                    />
-                                                </Tooltip>
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))} */}
-                            <div className="flex gap-2 items-center">
-                                <InputText placeholder="Masukkan Tipe Rumah" />
-                                <button className="flex text-white leading-3 tracking-tighter hover:cursor-pointer h-5 w-5 rounded-full bg-teal-500 text-center justify-center items-center">
-                                    <Tooltip title={`Tambahkan Tipe Rumah`}>
-                                        <Check
-                                            color="inherit"
-                                            fontSize="inherit"
-                                        />
-                                    </Tooltip>
-                                </button>
-                            </div>
-                        </CostumSelect>
+                            title={"Tipe Rumah"}
+                            value={rumah.tipe.nama_tipe}
+                        />
                     </div>
+                    {auth.user?.role == "pengunjung" && (
+                        <div className="flex justify-between items-center gap-3">
+                            <button
+                                onClick={() => setModalKunjungan(true)}
+                                className="w-full py-2 px-3 mt-3 rounded-md bg-blue-500 hover:bg-blue-600 useTransition text-white"
+                            >
+                                Atur Jadwal Kunjungan
+                            </button>
+                            <button
+                                onClick={() => setModalOrder(true)}
+                                className="w-full py-2 px-3 mt-3 rounded-md bg-green-500 hover:bg-green-600 useTransition text-white"
+                            >
+                                Order Now
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -310,11 +246,7 @@ export default function Show(props) {
                                     scope="row"
                                     class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                 >
-                                    <CostumSelect
-                                        disabled
-                                        value={item.bank.nama_bank}
-                                        placeholder="Pilih data bank"
-                                    ></CostumSelect>
+                                    {item.bank.nama_bank}
                                 </th>
                                 <td class="px-6 py-4">
                                     <CurrencyInputs
@@ -358,17 +290,8 @@ export default function Show(props) {
                         ))}
                 </tbody>
             </table>
-            <div>
-                <QuillCompnent
-                    className="form-control"
-                    value={rumah.keterangan}
-                    onChange={(e) => setData({ ...data, keterangan: e })}
-                />
-            </div>
-            <div className="fixed bottom-0 w-full justify-center flex  left-0 ">
-                <button className="form bg-teal-500 text-white">
-                    Upload Data Perumahan
-                </button>
+            <div className="py-3 px-4 rounded-md shadow-sm shadow-gray-500/50">
+                <p dangerouslySetInnerHTML={{ __html: rumah.keterangan }} />
             </div>
         </div>
     );
